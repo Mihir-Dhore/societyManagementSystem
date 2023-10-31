@@ -1,0 +1,28 @@
+<template>
+         <div class="signup-form">
+            <h2>Signup</h2>
+            <div class="firstLastName">
+                <lightning-input placeholder="First Name..." label="First Name" name="firstName" value={firstName} onchange={handleFirstNameChange} required></lightning-input>
+                <lightning-input placeholder="Last Name..." label="Last Name" name="lastName" value={lastName} onchange={handleLastNameChange} required></lightning-input>
+    
+            </div>
+            <lightning-input placeholder="Enter Email" label="Email" type="email" name="email" value={email} onchange={handleEmailChange} required></lightning-input>
+            <lightning-input placeholder="Enter Phone" label="Phone" name="Phone" type="Phone" value={Phone} onchange={handlePhoneChange} required></lightning-input>
+            <lightning-input placeholder="Enter Password" label="Password" name="Password" type="Password" value={Password} onchange={handlePasswordChange} required></lightning-input>
+
+            <div class="Signupbutton">
+                <lightning-button label="Sign Up" variant="brand" onclick={handleSignup}></lightning-button>
+             </div>
+             <div>
+                <hr style="width: 100%; height: 2px; background-color: #333;margin: 10px 0;"> 
+
+                <div class="loginHere" >
+                    <h4>Already Have An Account?<lightning-button 
+                    variant="base"
+                    label="Login here" 
+                    onclick={handleLoginHereClick} 
+                    ></lightning-button> </h4>
+                 </div>
+              </div>
+        </div>
+ </template>

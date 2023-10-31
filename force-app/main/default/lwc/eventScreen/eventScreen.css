@@ -1,0 +1,81 @@
+/* customLWC.css */
+.Heading{
+    font-size: 18px; 
+    font-weight: bold;
+    color: #12191c;  
+    text-align: center;
+    background-color: #f7f7f7;
+    padding: 8px;  
+    border-radius: 3px;  
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);  
+    font-family: Courier New;
+    text-transform: uppercase;  
+}
+
+.Content {
+    border: 2px solid #009688;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #f7f7f7;
+    border: 2px solid #ccc;
+    display: flex;
+    flex-direction: column;  
+}
+
+ .Content h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #009688;
+    margin: 0;  
+}
+
+ .Content .event-date {
+    font-size: 16px;
+    color: #524f4f;
+    margin: 8px 0; 
+}
+
+ .Content .location {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 8px 0;
+}
+
+ 
+  .event-register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.innerContent {
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px;
+    transition: all 0.3s;  
+    background-color: #fff;
+}
+
+.innerContent:hover {
+    background-color: #f0f0f0; 
+    transform: scale(1.05);  
+}
+.searchBox{
+     padding-left: 10px;
+     padding-right: 10px;
+     
+}
+.location{
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+.button{
+    text-align: center;
+}

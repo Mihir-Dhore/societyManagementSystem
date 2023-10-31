@@ -1,0 +1,81 @@
+<template>
+    <template if:true={ShowEventScreen}>
+
+        <lightning-card title="Event Screen" variant="base">
+            <div style="padding-left: 15px;padding-right: 15px;">
+                <h1 class="Heading">Upcoming Society Events <br>🎇🥂🎄</h1>
+            </div>
+            <div class="searchBox">
+                <lightning-input onchange={handlekeyEvent} value={searchKey} class="search-bar" type="search"
+                    name="search" placeholder="Search Event..."></lightning-input>
+            </div>
+
+            <div if:true={events}>
+                <ul>
+                    <template for:each={events} for:item="event">
+                        <div key={event.id}>
+
+                            <div class="Content">
+                                <div>
+                                    <h3 style="font-family: Courier;font-size: 20px; "
+                                        class="slds-text-heading_medium slds-p-top_x-small slds-m-bottom_xx-small">
+                                        <b>{event.Name}</b>
+                                    </h3>
+
+                                    <b>
+                                        <p class="event-date" style="font-size: 16px;"><lightning-formatted-date-time
+                                                value={event.Date_and_Time__c} year="numeric" month="numeric"
+                                                day="numeric" hour="2-digit" minute="2-digit"
+                                                time-zone-name="short"></lightning-formatted-date-time></p>
+                                    </b>
+                                    <br>
+
+                                     <span style="text-align: center; "><lightning-formatted-rich-text
+                                            value={event.Event_Image__c}></lightning-formatted-rich-text></span>
+
+
+
+                                    <div class="location">
+                                        <div style="margin-right: 10px;">
+                                            <lightning-icon icon-name='utility:checkin' alternative-text='checkin'
+                                                variant='success' size='small' title='checkin'></lightning-icon>
+                                        </div>
+                                        <div>
+                                            <p style="font-size: 17px; margin: 0; padding: 0;">
+                                                <b>{event.Location__c}</b>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="innerContent">
+
+                                        <p><b>Society:</b> {event.Society__r.Name}</p>
+                                        <p><b>Eligibility:</b> {event.Eligibility__c}</p>
+                                        <p><b>Organizer:</b> {event.Resident__r.Name}</p>
+                                    </div>
+
+                                    <br><br>
+                                    <template if:true={event.Registrationrequired}>
+                                        <div class=" button slds-p-around_medium lgc-bg">
+                                            <lightning-button variant="brand" label="Register here" title="Register here"
+                                                onclick={handleRegister} icon-name="utility:activity" icon-position="left"
+                                                class="slds-m-left_x-small">
+                                            </lightning-button>
+                                        </div>
+    
+                                    </template>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </ul>
+            </div>
+        </lightning-card>
+    </template>
+    <template if:true={ShowRegisterScreen}>
+        <c-event-registration-screen></c-event-registration-screen>
+    </template>
+
+</template>

@@ -21,4 +21,5 @@ export default class eventRegistrationScreen extends LightningElement {
         this.ShowRegisterScreen = false;
         this.showEventScreen = true;
     }
+    
  }

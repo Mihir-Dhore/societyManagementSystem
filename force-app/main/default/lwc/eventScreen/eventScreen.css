@@ -78,4 +78,11 @@
 }
 .button{
     text-align: center;
-}
+ }
+ .footer{
+    display: flex;
+    justify-content: center;
+ }
+ .AddUser{
+    margin-top: 1.1rem;
+ }

@@ -1,6 +1,5 @@
 <template>
     <template if:true={ShowEventScreen}>
-
         <lightning-card title="Event Screen" variant="base">
             <div style="padding-left: 15px;padding-right: 15px;">
                 <h1 class="Heading">Upcoming Society Events <br>🎇🥂🎄</h1>
@@ -30,11 +29,8 @@
                                     </b>
                                     <br>
 
-                                     <span style="text-align: center; "><lightning-formatted-rich-text
+                                    <span style="text-align: center; "><lightning-formatted-rich-text
                                             value={event.Event_Image__c}></lightning-formatted-rich-text></span>
-
-
-
                                     <div class="location">
                                         <div style="margin-right: 10px;">
                                             <lightning-icon icon-name='utility:checkin' alternative-text='checkin'
@@ -56,26 +52,77 @@
 
                                     <br><br>
                                     <template if:true={event.Registrationrequired}>
-                                        <div class=" button slds-p-around_medium lgc-bg">
-                                            <lightning-button variant="brand" label="Register here" title="Register here"
-                                                onclick={handleRegister} icon-name="utility:activity" icon-position="left"
-                                                class="slds-m-left_x-small">
-                                            </lightning-button>
+                                        <div class="footer">
+                                            <div class=" button slds-p-around_medium lgc-bg">
+                                                <lightning-button data-event-id={event.Id} variant="brand"
+                                                    label="Register here" title="Register here" onclick={handleRegister}
+                                                    icon-name="utility:activity" icon-position="left"
+                                                    class="slds-m-left_x-small">
+                                                </lightning-button>
+                                            </div>
+                                            <div class="AddUser">
+                                                <lightning-icon onclick={registerFamily} icon-name='utility:adduser'
+                                                    alternative-text='adduser' size='small'
+                                                    title='Add Family Member'></lightning-icon>
+                                            </div>
+
+
                                         </div>
-    
                                     </template>
-
-
                                 </div>
                             </div>
+                            <template if:true={isModalOpen}>
+                                <!-- Modal/Popup Box LWC starts here -->
+                                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+                                    aria-modal="true" aria-describedby="modal-content-id-1"
+                                    class="slds-modal slds-fade-in-open">
+                                    <div class="slds-modal__container">
+                                        <!-- Modal/Popup Box LWC header here -->
+                                        <header class="slds-modal__header">
+                                            <button
+                                                class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                                title="Close" onclick={closeModal}>
+                                                <lightning-icon icon-name="utility:close" alternative-text="close"
+                                                    variant="inverse" size="small"></lightning-icon>
+                                                <span class="slds-assistive-text">Close</span>
+                                            </button>
+                                        </header>
+                                        <!-- Modal/Popup Box LWC body starts here -->
+                                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                            <lightning-input type="checkbox"
+                                                label="Are you Sure, You want to Register For the Program"
+                                                name="input1"
+                                                value={checkboxValue}
+                                                onchange={handleCheckboxChange}>
+                                            </lightning-input>
+                                            <div class="slds-text-color_error slds-m-top_small" if:true={checkboxError}>
+                                                Please check the checkbox to Register.
+                                            </div>
+                                
+                                        </div>
+                                        <!-- Modal/Popup Box LWC footer starts here -->
+                                        <footer class="slds-modal__footer">
+                                            <button class="slds-button slds-button_neutral" onclick={closeModal}
+                                                title="Cancel">No</button>
+                                            <button class="slds-button slds-button_brand" data-event-id={event.Id}
+                                                onclick={submitYesDetails} title="OK">Yes</button>
+                                        </footer>
+                                    </div>
+                                </section>
+                                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+
+                            </template>
+
                         </div>
+
                     </template>
                 </ul>
             </div>
         </lightning-card>
     </template>
-    <template if:true={ShowRegisterScreen}>
-        <c-event-registration-screen></c-event-registration-screen>
-    </template>
 
+    <template if:true={showRegisteFamily}>
+        <c-event-registration-screen></c-event-registration-screen>
+
+    </template>
 </template>

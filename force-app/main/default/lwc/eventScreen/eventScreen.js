@@ -14,7 +14,7 @@ export default class EventScreen extends LightningElement {
         this.searchEvents();
     }
 
- 
+  
     connectedCallback(){
         this.searchEvents();
     }

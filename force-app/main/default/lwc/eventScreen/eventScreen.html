@@ -8,7 +8,6 @@
                 <lightning-input onchange={handlekeyEvent} value={searchKey} class="search-bar" type="search"
                     name="search" placeholder="Search Event..."></lightning-input>
             </div>
-
             <div if:true={events}>
                 <ul>
                     <template for:each={events} for:item="event">
@@ -47,7 +46,9 @@
 
                                         <p><b>Society:</b> {event.Society__r.Name}</p>
                                         <p><b>Eligibility:</b> {event.Eligibility__c}</p>
-                                        <p><b>Organizer:</b> {event.Resident__r.Name}</p>
+                                        <!-- <p><b>Organizer:</b> {event.Resident__r.Name}</p> -->
+                                        <p><b>Organizer:</b> {event.Contact__c}</p>
+                                        <!-- <p><b>Organizer:</b> {event.Contact__r.LastName}</p> -->    
                                     </div>
 
                                     <br><br>

@@ -18,16 +18,14 @@ export default class EventScreen extends LightningElement {
         this.searchEvents();
     }
 
-  
     connectedCallback(){
         this.searchEvents();
     }
 
-    searchEvents() {
+     searchEvents() {
         findEvents({ searchKey: this.searchKey })
         //For Registration required button
             .then((result) => {
-
                 let arr = JSON.parse(JSON.stringify(result));
                 arr.forEach((item) => {
                       console.log(item.Eligibility__c);

@@ -2,6 +2,7 @@ Parent To Child Relationship in LWC
 Scenario:- When User Select Society From the Lookup Input Field from the Modal the it should show the Related Events to that Society
 
 Parent Component(SocietyModal Screen):
+HTML:
 ```
 <template>
   <template if:true={showSocietyModal}>
@@ -40,4 +41,66 @@ Parent Component(SocietyModal Screen):
       <c-event-screen > storeEventId={eventId}</c-event-screen>
     </template>
 </template>
+```
+JS:
+```
+    @api eventId;
+     
+    @track showSocietyModal = true;
+    @track eventScreenParent = false;
+    //Save Button
+    handleSave(){
+        this.showSocietyModal=false;
+
+//It's used to select an HTML element from the current component's template. Specifically, it's looking for an element with a data-id attribute set to "society." 
+        let inputField = this.template.querySelector('[data-id="society"]');
+        this.eventId = inputField.value;
+//This line dispatches a custom event using the dispatchEvent method. The custom event is named 'passid', and it carries a data payload in its detail property. The payload //is the value of this.eventId
+        //Use to communicate between other LWC component
+
+        this.dispatchEvent(new CustomEvent('passid', { detail: this.eventId }));
+     }
+```
+Child Component(EventScreen):
+HTML:
+```
+    <template if:true={modalScreen}>
+          //onpassid={handlePassId} =>>>>>> event handler for the custom component
+        <c-society-modal-screen onpassid={handlePassId}></c-society-modal-screen>
+    </template>
+
+```
+JS:
+```
+    @track modalScreen = true;
+    handlePassId(event){
+        this.eventId = event.detail;
+        console.log('HandlePAssId'+this.eventId)
+        this.searchEvents();
+     }
+
+     searchEvents() {
+        findEvents({ eventId: this.eventId })
+        //For Registration required button
+            .then((result) => {
+                console.log("Event Name"+ result.Name);
+                console.log("Organizer Name"+ result.Contact__c);
+                console.log("Event Name"+ result.Name);
+
+                let arr = JSON.parse(JSON.stringify(result));
+                arr.forEach((item) => {
+                      console.log(item.Eligibility__c);
+                    if (item.Eligibility__c == 'Registration Required') {
+                        item["Registrationrequired"] = true;
+                     } else {
+                          item["Registrationrequired"] = false;
+                    }
+                });   
+                this.events = arr;
+
+            })
+            .catch((error) => {
+                this.events = error;
+            });
+    }
 ```

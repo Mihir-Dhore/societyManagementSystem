@@ -4,10 +4,10 @@
             <div style="padding-left: 15px;padding-right: 15px;">
                 <h1 class="Heading">Upcoming Society Events <br>🎇🥂🎄</h1>
             </div>
-            <div class="searchBox">
+            <!-- <div class="searchBox">
                 <lightning-input onchange={handlekeyEvent} value={searchKey} class="search-bar" type="search"
                     name="search" placeholder="Search Event..."></lightning-input>
-            </div>
+            </div> -->
             <div if:true={events}>
                 <ul>
                     <template for:each={events} for:item="event">
@@ -46,9 +46,9 @@
 
                                         <p><b>Society:</b> {event.Society__r.Name}</p>
                                         <p><b>Eligibility:</b> {event.Eligibility__c}</p>
-                                        <!-- <p><b>Organizer:</b> {event.Resident__r.Name}</p> -->
+                                        <!-- <p><b>Organizer:</b> {event.Contact__r.Name}</p> -->
                                         <p><b>Organizer:</b> {event.Contact__c}</p>
-                                        <!-- <p><b>Organizer:</b> {event.Contact__r.LastName}</p> -->    
+                                        <!-- <p><b>Organizer:</b> {event.Contact__r.LastName}</p>     -->
                                     </div>
 
                                     <br><br>
@@ -124,6 +124,8 @@
 
     <template if:true={showRegisteFamily}>
         <c-event-registration-screen></c-event-registration-screen>
-
+    </template>
+    <template if:true={modalScreen}>
+        <c-society-modal-screen onpassid={handlePassId}></c-society-modal-screen>
     </template>
 </template>

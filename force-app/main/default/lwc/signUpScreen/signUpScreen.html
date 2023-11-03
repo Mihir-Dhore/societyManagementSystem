@@ -7,7 +7,7 @@
     
             </div>
             <lightning-input placeholder="Enter Email" label="Email" type="email" name="email" value={email} onchange={handleEmailChange} required></lightning-input>
-            <lightning-input placeholder="Enter Phone" label="Phone" name="Phone" type="Phone" value={Phone} onchange={handlePhoneChange} required></lightning-input>
+            <lightning-input placeholder="Enter Phone" label="Phone" name="Phone" type="Phone" value={Phone} onchange={handlePhoneChange} maxlength="10" required></lightning-input>
             <lightning-input placeholder="Enter Password" label="Password" name="Password" type="Password" value={Password} onchange={handlePasswordChange} required></lightning-input>
 
             <div class="Signupbutton">

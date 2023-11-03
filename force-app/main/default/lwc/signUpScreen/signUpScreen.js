@@ -10,9 +10,6 @@ export default class SignupForm extends NavigationMixin(LightningElement) {
     @track Phone = '';
     @track Password = '';
 
-
-     
-
     handleFirstNameChange(event) {
         this.firstName = event.target.value;
     }
@@ -26,10 +23,15 @@ export default class SignupForm extends NavigationMixin(LightningElement) {
     }
 
     handlePhoneChange(event) {
-        this.Phone = event.target.value;
+         this.Phone = event.target.value;
+
     }
     handlePasswordChange(event) {
         this.Password = event.target.value;
+        if (newPhoneNumber.length === 10) {
+             this.Phone = newPhoneNumber;
+        } else {
+         }
     }
 
     //Signup Functionality

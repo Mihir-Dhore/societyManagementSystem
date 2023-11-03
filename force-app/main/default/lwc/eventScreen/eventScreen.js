@@ -1,6 +1,8 @@
 import { LightningElement,track, wire} from 'lwc';
-import findEvents from '@salesforce/apex/SMSsearchEvent.findEvents';
+import findEvents from '@salesforce/apex/SMSsearchEvent.selectSociety';
 import registerForEvent from '@salesforce/apex/SMSsearchEvent.registerForEvent';
+
+ 
 
 export default class EventScreen extends LightningElement {
  
@@ -9,6 +11,7 @@ export default class EventScreen extends LightningElement {
      @track error;
      @track errorMessage = '';
   
+
     //for search
     @track searchKey = ''; 
     handlekeyEvent(event) {
@@ -18,14 +21,25 @@ export default class EventScreen extends LightningElement {
         this.searchEvents();
     }
 
-    connectedCallback(){
+  
+    // connectedCallback(){
+    //     this.searchEvents();
+    // }
+    @track modalScreen = true;
+    handlePassId(event){
+        this.eventId = event.detail;
+        console.log('HandlePAssId'+this.eventId)
         this.searchEvents();
-    }
+     }
 
      searchEvents() {
-        findEvents({ searchKey: this.searchKey })
+        findEvents({ eventId: this.eventId })
         //For Registration required button
             .then((result) => {
+                console.log("Event Name"+ result.Name);
+                console.log("Organizer Name"+ result.Contact__c);
+                console.log("Event Name"+ result.Name);
+
                 let arr = JSON.parse(JSON.stringify(result));
                 arr.forEach((item) => {
                       console.log(item.Eligibility__c);

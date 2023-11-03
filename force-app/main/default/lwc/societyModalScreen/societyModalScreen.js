@@ -1,27 +1,19 @@
 import { LightningElement, api, track,wire } from 'lwc';
-import selectSociety from '@salesforce/apex/SMSsearchEvent.selectSociety'
 export default class SocietyModalScreen extends LightningElement {
-    @track showSocietyModal = true;
 
     @api eventId;
-    @wire(selectSociety, {eventId: '$eventId'})
-    wiredSociety;
      
-    handleSocietyChange(event){
-        this.eventId = event.target.value;
-        console.log(event.target.value);
-     }
- 
+    @track showSocietyModal = true;
+    @track eventScreenParent = false;
     //Save Button
     handleSave(){
-        if(this.wiredSociety.data){
-            console.log(this.wiredSociety.data);
-            
-            this.showSocietyModal=false;
+        this.showSocietyModal=false;
 
-        }else if(this.wiredSociety.error){
-            console.error(this.wiredSociety.error);
-        }
-    }
+        let inputField = this.template.querySelector('[data-id="society"]');
+        this.eventId = inputField.value;   
+        //Use to communicate between other LWC component
+        this.dispatchEvent(new CustomEvent('passid', { detail: this.eventId }));
+
+     }
 
 }

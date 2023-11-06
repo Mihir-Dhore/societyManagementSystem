@@ -92,6 +92,7 @@ export default class EventScreen extends LightningElement {
             console.log('Checkbox selected');
             registerForEvent({eventId: this.eventId })
             .then(result => {
+                
                 console.log('Registration successful:'+ result);
                 this.isModalOpen = false;
 

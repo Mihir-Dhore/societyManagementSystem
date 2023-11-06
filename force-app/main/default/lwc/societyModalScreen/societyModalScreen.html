@@ -12,19 +12,14 @@
             <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">SELECT SOCIETY</h1>
           </div>
           <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-            <lightning-record-edit-form
-            density="compact"
-            object-api-name="Event__c"
-            onsuccess={handleSocietySuccess}
-           >
-              <lightning-input-field field-name="Society__c" data-id="society" variant="standard">
-              </lightning-input-field>
-              <div class="slds-modal__footer">
-                <button class="slds-button slds-button_neutral" aria-label="Cancel and close">Cancel</button>
-                <button onclick={handleSave} class="slds-button slds-button_brand">Save</button>
-              </div>
+            <lightning-record-edit-form density="compact" object-api-name="Event__c" onsuccess={handleSocietySuccess}>
+              <lightning-input-field field-name="Society__c" data-id="society" value={field1} onchange={handleSocietyFieldChange} variant="standard"></lightning-input-field>
+              <p style="color: red; font-size:10px">Warning: Once You Select the Society You Won't Be Able To Edit It</p>
            </lightning-record-edit-form>
           </div>
+          <div class="slds-modal__footer"> 
+            <button onclick={handleSave} class="slds-button slds-button_brand" disabled={disableBtn}>Save</button>
+         </div>
         </div>
       </section>
       <div class="slds-backdrop slds-backdrop_open" role="presentation"></div> 

@@ -18,7 +18,10 @@ export default class SocietyModalScreen extends LightningElement {
     handleSave(){
 
         let inputField = this.template.querySelector('[data-id="society"]');
-        this.eventId = inputField.value;   
+        this.eventId = inputField.value;  
+
+        this.dispatchEvent(new CustomEvent('closemodal'));
+
         //Use to communicate between other LWC component
         this.dispatchEvent(new CustomEvent('passid', { detail: this.eventId }));
         this.showSocietyModal=false;

@@ -1,9 +1,14 @@
-import { LightningElement,track, wire} from 'lwc';
-import findEvents from '@salesforce/apex/SMSsearchEvent.selectSociety';
+import { LightningElement,track, api,wire} from 'lwc';
+// import findEvents from '@salesforce/apex/SMSsearchEvent.selectSociety';
 import registerForEvent from '@salesforce/apex/SMSsearchEvent.registerForEvent';
-
+ 
+import checkRegistration from '@salesforce/apex/SMSsearchEvent.checkRegistration';
  
 
+import CheckCurrentUserSociety from '@salesforce/apex/SMSsearchEvent.isCurrentUserSocietyEmpty';
+import SearchEventsForAlreadyRagstered from '@salesforce/apex/SMSsearchEvent.SearchEventsForAlreadyRagstered';
+import UpdateSocietyOnAccount from '@salesforce/apex/SMSsearchEvent.UpdateAccountSociety';
+ 
 export default class EventScreen extends LightningElement {
  
      @track events = [];
@@ -11,6 +16,72 @@ export default class EventScreen extends LightningElement {
      @track error;
      @track errorMessage = '';
   
+
+
+     //************************************For Society Modal-START*************************************************
+
+     @track showSocietyModal = true;
+     @track ShowEventScreen = false;
+
+     connectedCallback(){
+        this.CheckCurrentUserSocietyField();
+     }
+
+     @track SocietyExistContact;
+
+     CheckCurrentUserSocietyField(){
+         CheckCurrentUserSociety()
+         .then((result)=>{
+             this.SocietyExistContact=result;
+             console.log(this.SocietyExistContact);
+             this.SocietyAlreadyexist();
+
+             this.showSocietyModal = false;
+             this.ShowEventScreen = true;
+         }).catch((error)=>{
+            // this.showSocietyModal  = true;
+          });
+     }
+
+     handleSave(){
+        let inputField = this.template.querySelector('[data-id="society"]');
+        this.SocietyExistContact = inputField.value;
+        console.log(this.SocietyExistContact);
+        this.UpdateSocietyOnContact();
+        this.SocietyAlreadyexist();
+       
+        this.showSocietyModal = false;
+        // this.ShowEventScreen = true;
+     }
+
+     SocietyAlreadyexist(){
+         SearchEventsForAlreadyRagstered({AlreadyRagistered:this.SocietyExistContact})
+         .then((result)=>{
+             let arr = JSON.parse(JSON.stringify(result));
+             arr.forEach((item)=>{
+                 if(item.Eligibility__c=='Registration Required'){
+                    item["Registrationrequired"] = true;
+                 }else{
+                    item["Registrationrequired"] = false;
+                 }
+             });
+             this.events = arr;
+         }).catch((error)={
+
+         });
+         
+     }
+
+    async UpdateSocietyOnContact(){
+        await UpdateSocietyOnAccount({SocietyId: this.SocietyExistContact})
+        .then((result)=>{
+
+        }).catch((error)=>{
+
+        });
+     }
+ 
+     //************************************For Society Modal-END*************************************************
 
     //for search
     @track searchKey = ''; 
@@ -22,56 +93,20 @@ export default class EventScreen extends LightningElement {
     }
 
   
-    // connectedCallback(){
-    //     this.searchEvents();
-    // }
     @track modalScreen = true;
-    handlePassId(event){
-        this.eventId = event.detail;
-        console.log('HandlePAssId'+this.eventId)
-        this.searchEvents();
+ 
+     //to close Modal
+     handleCloseModal(){
+        this.isModalOpen = false;
      }
-
-     searchEvents() {
-        findEvents({ eventId: this.eventId })
-        //For Registration required button
-            .then((result) => {
-                console.log("Event Name"+ result.Name);
-                console.log("Organizer Name"+ result.Contact__c);
-                console.log("Event Name"+ result.Name);
-
-                let arr = JSON.parse(JSON.stringify(result));
-                arr.forEach((item) => {
-                      console.log(item.Eligibility__c);
-                    if (item.Eligibility__c == 'Registration Required') {
-                        item["Registrationrequired"] = true;
-                     } else {
-                          item["Registrationrequired"] = false;
-                    }
-                });   
-                this.events = arr;
-
-            })
-            .catch((error) => {
-                this.events = error;
-            });
-    }
-    
  
 
     //Register Modal
     @track isModalOpen =false;
     @track ShowEventScreen = true;
 
-    //For register here button
-    handleRegister(event){
-        this.isModalOpen = true;
-        this.eventId = event.currentTarget.dataset.eventId;
-        console.log('EventID'+ this.eventId)
-
-     }
-
-         //For checkbox
+ 
+          //For checkbox
          @track checkboxValue = false;
          @track checkboxError = false;
      

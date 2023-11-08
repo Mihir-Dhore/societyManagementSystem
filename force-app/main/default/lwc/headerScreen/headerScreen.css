@@ -1,0 +1,18 @@
+.main {
+    background-color: #f4f6f9;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+/* .event{
+    margin-left: 3rem;
+} */
+.menu-item {
+    cursor: pointer;
+    transition: font-size 0.2s ease-in-out;
+}
+
+.menu-item:hover {
+    font-size: 1.1em; /* Adjust the font size as needed */
+    color: #0070c7; /* Change the color on hover as needed */
+}

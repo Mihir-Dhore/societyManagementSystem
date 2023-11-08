@@ -28,11 +28,7 @@ export default class SignupForm extends NavigationMixin(LightningElement) {
     }
     handlePasswordChange(event) {
         this.Password = event.target.value;
-        if (newPhoneNumber.length === 10) {
-             this.Phone = newPhoneNumber;
-        } else {
-         }
-    }
+     }
 
     //Signup Functionality
          handleSignup() 

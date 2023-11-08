@@ -23,8 +23,9 @@
         </div>
       </section>
       <div class="slds-backdrop slds-backdrop_open" role="presentation"></div> 
-    </template>
-    <template if:true={eventScreenParent}>
-      <c-event-screen > storeEventId={eventId}</c-event-screen>
+      <template if:true={eventScreenParent}>
+        <c-event-screen > storeEventId={eventId}</c-event-screen>
+      </template>
+  
     </template>
 </template>

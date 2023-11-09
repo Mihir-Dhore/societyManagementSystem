@@ -2,7 +2,7 @@ import { LightningElement,track, api,wire} from 'lwc';
 // import findEvents from '@salesforce/apex/SMSsearchEvent.selectSociety';
 import registerForEvent from '@salesforce/apex/SMSsearchEvent.registerForEvent';
  
-import checkRegistration from '@salesforce/apex/SMSsearchEvent.checkRegistration';
+// import checkRegistration from '@salesforce/apex/SMSsearchEvent.checkRegistration';
  
 
 import CheckCurrentUserSociety from '@salesforce/apex/SMSsearchEvent.isCurrentUserSocietyEmpty';
@@ -51,7 +51,7 @@ export default class EventScreen extends LightningElement {
         this.SocietyAlreadyexist();
        
         this.showSocietyModal = false;
-        // this.ShowEventScreen = true;
+        this.ShowEventScreen = true;
      }
 
      SocietyAlreadyexist(){
@@ -83,6 +83,47 @@ export default class EventScreen extends LightningElement {
  
      //************************************For Society Modal-END*************************************************
 
+
+          //************************************For Registration Modal-START*************************************************
+
+          @track isModalOpen = false;
+
+          handleRegister(event){
+            this.isModalOpen = true;
+            this.eventId = event.currentTarget.dataset.eventId;
+           }
+          closeModal(){
+            this.isModalOpen = false;
+
+          }
+        //For YES button
+            submitYesDetails()
+            {
+                console.log("eventId",this.eventId)
+                if(this.checkboxValue == false)
+                {
+                    this.checkboxError = true;
+                    console.log('Checkbox not selected');
+
+                } else{
+                    console.log('Checkbox selected');
+
+                    registerForEvent({eventId: this.eventId })
+                    .then(result => {
+                        alert(result)
+                        console.log('result', result);
+                        this.isModalOpen = false;
+                    })
+                    .catch(error => {
+                        this.error = error;
+                        console.error('Error registering for the event:', error.body.message);
+                    });
+                }     
+            }
+
+
+          //************************************For Registration Modal-END*************************************************
+
     //for search
     @track searchKey = ''; 
     handlekeyEvent(event) {
@@ -96,14 +137,10 @@ export default class EventScreen extends LightningElement {
     @track modalScreen = true;
  
      //to close Modal
-     handleCloseModal(){
-        this.isModalOpen = false;
-     }
- 
+  
 
     //Register Modal
-    @track isModalOpen =false;
-    @track ShowEventScreen = true;
+     @track ShowEventScreen = true;
 
  
           //For checkbox
@@ -115,36 +152,7 @@ export default class EventScreen extends LightningElement {
              this.checkboxError = false; 
          }
 
-    //For YES button
-    submitYesDetails()
-    {
-        if(this.checkboxValue == false)
-        {
-            this.checkboxError = true;
-            console.log('Checkbox not selected');
-
-        } else{
-            console.log('Checkbox selected');
-            registerForEvent({eventId: this.eventId })
-            .then(result => {
-                
-                console.log('Registration successful:'+ result);
-                this.isModalOpen = false;
-
-            })
-            .catch(error => {
-                
-                this.error = error;
-                console.error('Error registering for the event:', error.body.message);
-            });
-        }     
-    }
-
-    closeModal(){
-        // this.ShowEventScreen = false;
-        this.isModalOpen =false;
-    }
-    //For registerFamily
+     //For registerFamily
     @track showRegisteFamily = false;
     registerFamily(){
         this.showRegisteFamily = true;

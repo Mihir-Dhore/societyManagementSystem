@@ -1,14 +1,14 @@
 import { LightningElement,track, api,wire} from 'lwc';
 // import findEvents from '@salesforce/apex/SMSsearchEvent.selectSociety';
 import registerForEvent from '@salesforce/apex/SMSsearchEvent.registerForEvent';
- 
 // import checkRegistration from '@salesforce/apex/SMSsearchEvent.checkRegistration';
  
-
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import CheckCurrentUserSociety from '@salesforce/apex/SMSsearchEvent.isCurrentUserSocietyEmpty';
 import SearchEventsForAlreadyRagstered from '@salesforce/apex/SMSsearchEvent.SearchEventsForAlreadyRagstered';
 import UpdateSocietyOnAccount from '@salesforce/apex/SMSsearchEvent.UpdateAccountSociety';
- 
+import checkUserRegistrationForEvent from '@salesforce/apex/SMSsearchEvent.checkUserRegistrationForEvent';
+
 export default class EventScreen extends LightningElement {
  
      @track events = [];
@@ -89,12 +89,23 @@ export default class EventScreen extends LightningElement {
           @track isModalOpen = false;
 
           handleRegister(event){
-            this.isModalOpen = true;
             this.eventId = event.currentTarget.dataset.eventId;
+            checkUserRegistrationForEvent({eventId:this.eventId})
+            .then((result)=>{
+                if(result=='Already Registered'){
+                    this.dispatchEvent(new ShowToastEvent({
+                        title: "Already Registered",
+                        variant: "warning"
+                    }));
+                }else{
+                    this.isModalOpen = true;
+
+                }
+            })
            }
+           
           closeModal(){
             this.isModalOpen = false;
-
           }
         //For YES button
             submitYesDetails()

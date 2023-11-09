@@ -1,22 +1,10 @@
 import { LightningElement, api, track,wire } from 'lwc';
-import myProfileRelatedContact from '@salesforce/apex/SMSsearchEvent.myProfileRelatedContact';
+import SMS from '@salesforce/resourceUrl/SMS';
 
 export default class HeaderScreen extends LightningElement {
 
-    @api eventId;
-    @track contacts;
- 
-    @wire(myProfileRelatedContact,{eventId: '$eventId'})
-    wiredprofileContacts({data,error})
-    {
-        if(data){
-            this.contacts = data;
-            console.log('Contact',this.contacts)
-        }else if(error){
-           alert('Errror!')
-        }
-    }
-
+    SMS = SMS;
+  
     
     @track showEventScreen = false;
     handleEventClick(){
@@ -24,10 +12,11 @@ export default class HeaderScreen extends LightningElement {
 
     }
 
-    @track myProfile = false;
+    @track ShowMyProfile = false;
     handlemyProfileClick(){
-        this.myProfile = true;
-
+        this.ShowMyProfile = true;
+        this.showEventScreen = false;
     }
+     
 
 }

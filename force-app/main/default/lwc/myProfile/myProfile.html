@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Profle" icon-name="standard:account">
+        <template if:true={data}>
+             <div style="background-color: green;">
+                <lightning-datatable key-field="Id" data={data} columns={columns} hide-checkbox-column="true"
+                show-row-number-column="true" onrowaction={callRowAction}>
+            </lightning-datatable>
+            </div>
+        </template>
+        <template if:true={error}>
+            {error}>
+        </template>
+    </lightning-card>
+</template>

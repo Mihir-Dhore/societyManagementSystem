@@ -2,16 +2,20 @@
          <lightning-card title="Home Screen" variant="base">
             <div class="main">
                 <div class="sms">
-                    <h1  data-type="sms">SMS</h1>
+                     <img  style="height: 50px; display:flex;" class="img" src={SMS} alt="SMS-Logo">                
+
                 </div>
-                <div class="event">
-                    <h1  class="menu-item" onclick={handleEventClick} data-type="event">Event</h1>
-                </div>
-                <div class="utilities">
-                    <h1 class="menu-item" data-type="utilities">Utilities</h1>
-                </div>
-                <div class="my-profile">
-                    <h1 class="menu-item" onclick={handlemyProfileClick} data-type="myprofile">MyProfile</h1>
+                <div class="innerheader">
+                    <div class="event">
+                        <h1  class="menu-item" onclick={handleEventClick} data-type="event">Event</h1>
+                    </div>
+                    <div class="utilities">
+                        <h1 class="menu-item" data-type="utilities">Utilities</h1>
+                    </div>
+                    <div class="my-profile">
+                        <h1 class="menu-item" onclick={handlemyProfileClick} data-type="myprofile">MyProfile</h1>
+                    </div>
+    
                 </div>
             </div>
         </lightning-card>
@@ -19,21 +23,10 @@
     <template if:true={showEventScreen}>
         <c-event-screen></c-event-screen>
     </template>
+    <template if:true={ShowMyProfile}>
+        <c-my-profile></c-my-profile>
 
-    <template if:true={myProfile}>
-        <lightning-card key={con.Id} icon-name="standard:account" variant="base">
-
-        <template for:each={contacts} for:item="con">
-            <div key={con.Id} class="check-box-Info-Container">
-                <div class="info-container">
-                    <p class="info">Contact ID: <span>{con.Id}</span></p>
-                    <p class="info"> Name: <span style="cursor: pointer;" >{con.LastName}</span></p>
-                    <p class="info"> Society: {con.Society__c}</span></p>
-                </div> 
-            </div>
-        </template>
-    </lightning-card>
-
+    </template>
 
     </template>
 </template>

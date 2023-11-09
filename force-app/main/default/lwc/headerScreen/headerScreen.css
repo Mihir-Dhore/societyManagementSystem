@@ -4,9 +4,19 @@
     justify-content: space-between;
     padding: 20px;
 }
-/* .event{
-    margin-left: 3rem;
-} */
+.innerheader{
+    display: flex;
+    justify-content: space-between;
+}
+.event{
+    margin-right: 2rem;
+    margin-left: 2rem;
+
+}
+.utilities{
+    margin-right: 2rem;
+}
+ 
 .menu-item {
     cursor: pointer;
     transition: font-size 0.2s ease-in-out;

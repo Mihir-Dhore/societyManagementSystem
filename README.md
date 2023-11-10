@@ -252,4 +252,73 @@ public without sharing class FetchRelatedContact {
     }
 }
 ```
+LWC Component to Add Contact From Guest User Side Manually
+(First Fetch data or Show data on component the perform this activity.s
+HTML:-
 
+```
+   <lightning-input label="First Name" value={firstName} onchange={handleFirstNameChange}></lightning-input>
+                <lightning-input label="Last Name" value={lastName} onchange={handleLastNameChange}></lightning-input>
+                <lightning-input label="Email" type="email" value={email} onchange={handleEmailChange}></lightning-input>
+        
+
+                <lightning-button
+                label="Create Contact"
+                title="Create a new Contact associated with the Account"
+                onclick={handleCreateContact}
+                variant="brand"
+            ></lightning-button>
+```
+JavaScript:-
+```
+   @track fieldName = '';
+     @track lastName = '';
+     @track email = '';
+
+     handleFirstNameChange(event){
+        this.fieldName = event.target.value;
+     }
+     handleLastNameChange(event){
+        this.lastName = event.target.value;
+     }
+     handleEmailChange(event){
+        this.email = event.target.value;
+     }
+ 
+     handleCreateContact(){
+        createContact({firstName:this.firstName, lastName:this.lastName, email:this.email})
+        .then((result)=>{
+            console.log('Contact Created Succesfully:', result);
+            return refreshApex(this.wireResult); // To refresh current Page --> this.wireResult is variable where Wire data is.
+         })
+        .catch(error=>{
+            console.error('Error Creating Contact: ', error);
+        })
+     }
+```
+Apex class:-
+```
+//To Add Family Member
+    @AuraEnabled
+    public static String createContact(String firstName,String lastName, String email){
+        
+        String currentUserName = UserInfo.getUserName();
+        List<Account> getAccounts = [Select Id,Name, Email__c From Account Where Email__c =:currentUserName];
+ 
+        if(getAccounts!=Null)
+        {
+               Contact newContact = new Contact();
+               newContact.AccountId = getAccounts[0].Id;
+                newContact.FirstName = firstName;
+                newContact.LastName = lastName;
+                newContact.Email = email;
+           
+               insert newContact;
+               return 'Contact Added Succesfully';
+
+        }
+        return 'Error';
+
+ 
+    }
+``

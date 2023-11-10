@@ -1,6 +1,32 @@
 <template>
     <lightning-card title="Profile" icon-name="standard:account">
         <template if:true={data}>
+            <lightning-button style="justify-content: right;"
+              variant="success"
+              label="Add Family Member" 
+              onclick={handleAddFamilyMemberClick} 
+            ></lightning-button>
+            <template if:true={showForm}>
+                <lightning-input label="First Name" value={firstName} onchange={handleFirstNameChange}></lightning-input>
+                <lightning-input label="Last Name" value={lastName} onchange={handleLastNameChange}></lightning-input>
+                <lightning-input label="Email" type="email" value={email} onchange={handleEmailChange}></lightning-input>
+        
+
+                <lightning-button
+                label="Cancel"
+                onclick={handleCancelContact}
+                variant="brand"
+            ></lightning-button>
+    
+
+                <lightning-button
+                label="Add Family Member"
+                title="Create a new Contact associated with the Account"
+                onclick={handleCreateContact}
+                variant="brand"
+            ></lightning-button>
+    
+            </template>
             <lightning-datatable key-field="Id" data={data} columns={columns} hide-checkbox-column="true"
                 show-row-number-column="true" onrowaction={callRowAction}></lightning-datatable>
         </template>

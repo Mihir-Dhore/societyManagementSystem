@@ -1,9 +1,14 @@
-import { LightningElement, wire,track } from 'lwc';
+import { LightningElement, api,wire,track } from 'lwc';
 import GetRelatedContacts from '@salesforce/apex/SMSsearchEvent.GetRelatedContacts';
 import { NavigationMixin } from 'lightning/navigation';
 import { deleteRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
+
+import createContact from '@salesforce/apex/SMSsearchEvent.createContact';
+
+ 
+
 const columns = [
     { label: 'Name', fieldName: 'Name' },
     { label: 'Phone', fieldName: 'Phone' },
@@ -62,7 +67,41 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
             this.error = result.error;
         }
     }
+
+          //****************************For Add family member -START****************************
+    @track showForm = false;
+    handleAddFamilyMemberClick(){
+        this.showForm = true;
+     }
+     handleCancelContact(){
+      }
+     @track fieldName = '';
+     @track lastName = '';
+     @track email = '';
+
+     handleFirstNameChange(event){
+        this.fieldName = event.target.value;
+     }
+     handleLastNameChange(event){
+        this.lastName = event.target.value;
+     }
+     handleEmailChange(event){
+        this.email = event.target.value;
+     }
  
+     handleCreateContact(){
+        createContact({firstName:this.firstName, lastName:this.lastName, email:this.email})
+        .then((result)=>{
+            console.log('Contact Created Succesfully:', result);
+            return refreshApex(this.wireResult);
+         })
+        .catch(error=>{
+            console.error('Error Creating Contact: ', error);
+        })
+     }
+
+          //****************************For Add family member -END****************************
+
     callRowAction(event) {
         const rowId = event.detail.row.Id;
         const actionName = event.detail.action.name;
@@ -106,4 +145,5 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
         this.dispatchEvent(evt);
     }
     
+
 }

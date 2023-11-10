@@ -73,14 +73,24 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
     handleAddFamilyMemberClick(){
         this.showForm = true;
      }
-     handleCancelContact(){
+   
+      handleCreateContact(){
+        this.dispatchEvent(new ShowToastEvent({
+            title: "Family Member Added Successfully",
+             variant: "success"
+        }));
+        this.showForm = false;
       }
-     @track fieldName = '';
+      handleCancel(){
+        this.showForm = false;
+      }
+      
+      @track firstName = '';
      @track lastName = '';
      @track email = '';
-
-     handleFirstNameChange(event){
-        this.fieldName = event.target.value;
+     @track phone = '';
+      handleFirstNameChange(event){
+        this.firstName = event.target.value;
      }
      handleLastNameChange(event){
         this.lastName = event.target.value;
@@ -88,9 +98,11 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
      handleEmailChange(event){
         this.email = event.target.value;
      }
- 
+     handlePhoneChange(event){
+        this.phone = event.target.value;
+     }
      handleCreateContact(){
-        createContact({firstName:this.firstName, lastName:this.lastName, email:this.email})
+        createContact({firstName:this.firstName, lastName:this.lastName, email:this.email,phone:this.phone})
         .then((result)=>{
             console.log('Contact Created Succesfully:', result);
             return refreshApex(this.wireResult);

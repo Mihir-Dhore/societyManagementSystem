@@ -1,14 +1,26 @@
 <template>
     <lightning-card>
-        <template if:true={data}>
-            <div style="display: flex; justify-content:right; margin:20px">
-                <lightning-button
-                variant="brand"
-                label="Add Family Member" 
-                onclick={handleAddFamilyMemberClick} 
-              ></lightning-button>
-            </div>
-        
+         <div>
+            <h1>Account Details</h1>
+            <!-- <template if:true={accountData}>
+                <template for:each={accountData} for:item="account">
+                    <div key={account.Id}>
+                        <p><strong>Name:</strong> {account.Name}</p>
+                        <p><strong>Email:</strong> {account.Email__c}</p>
+                    </div>
+                </template>
+            </template> -->
+            <p><b>{accname}</b></p>
+          </div>
+
+        <template if:true={data}>      
+                <div style="display: flex; justify-content:right; margin:20px">
+                    <lightning-button
+                    variant="brand"
+                    label="Add Family Member" 
+                    onclick={handleAddFamilyMemberClick} 
+                  ></lightning-button>
+                </div>
             <template if:true={showForm}>
 
                 <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">

@@ -6,6 +6,8 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 
 import createContact from '@salesforce/apex/SMSsearchEvent.createContact';
+import showAccount from '@salesforce/apex/SMSsearchEvent.showAccountDetails';
+
 
  
 
@@ -69,6 +71,31 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
     }
 
           //****************************For Add family member -START****************************
+
+          //To show AccountInfo - Start
+          connectdCallback(){
+           this.loadAccountDetails();
+          }
+
+          @track accname;
+    @track accountDat=[];
+
+
+    loadAccountDetails() {
+        showAccount()
+            .then(result => {
+                this.accountData = result.forEach(acc => {
+     this.accname =acc.Name;                 
+                });
+                console.log('sdskjsjkd',this.accountData)
+            })
+            .catch(error => {
+                console.error('Error', error);
+            });
+    }
+          //To show AccountInfo-End
+
+     
     @track showForm = false;
     handleAddFamilyMemberClick(){
         this.showForm = true;
@@ -84,7 +111,7 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
       handleCancel(){
         this.showForm = false;
       }
-      
+
       @track firstName = '';
      @track lastName = '';
      @track email = '';

@@ -104,3 +104,152 @@ JS:
             });
     }
 ```
+
+LWC data table with EDIT, VIEW And DELETE Buttons
+-->The Table Show the Information of Current Login Account's related Contact into the table 
+
+HTML:-
+```
+HTML:-
+<template>
+    <lightning-card title="Profile" icon-name="standard:account">
+        <template if:true={data}>
+            <lightning-datatable key-field="Id" data={data} columns={columns} hide-checkbox-column="true"
+                show-row-number-column="true" onrowaction={callRowAction}></lightning-datatable>
+        </template>
+        <template if:true={error}>
+            {error}
+        </template>
+    </lightning-card>
+</template>
+```
+JavaSript:-
+```
+import { LightningElement, wire,track } from 'lwc';
+import GetRelatedContacts from '@salesforce/apex/SMSsearchEvent.GetRelatedContacts';
+import { NavigationMixin } from 'lightning/navigation';
+import { deleteRecord } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { refreshApex } from '@salesforce/apex';
+const columns = [
+    { label: 'Name', fieldName: 'Name' },
+    { label: 'Phone', fieldName: 'Phone' },
+    { label: 'Email', fieldName: 'Email' },
+    {
+        type: "button", label: 'View', initialWidth: 100, typeAttributes: {
+            label: 'View',
+            name: 'View',
+            title: 'View',
+            disabled: false,
+            value: 'view',
+            iconPosition: 'left',
+            iconName:'utility:preview',
+            variant:'Brand'
+        }
+    },
+    {
+        type: "button", label: 'Edit', initialWidth: 100, typeAttributes: {
+            label: 'Edit',
+            name: 'Edit',
+            title: 'Edit',
+            disabled: false,
+            value: 'edit',
+            iconPosition: 'left',
+            iconName:'utility:edit',
+            variant:'Brand'
+        }
+    },
+    {
+        type: "button", label: 'Delete', initialWidth: 110, typeAttributes: {
+            label: 'Delete',
+            name: 'Delete',
+            title: 'Delete',
+            disabled: false,
+            value: 'delete',
+            iconPosition: 'left',
+            iconName:'utility:delete',
+            variant:'destructive'
+        }
+    }
+];
+
+export default class MyProfile extends NavigationMixin (LightningElement) {
+
+    @track data;
+    @track wireResult;
+    @track error;
+    columns = columns;
+
+     @wire(GetRelatedContacts)
+    wiredContacts(result){
+        this.wireResult = result;
+         if(result.data){
+            this.data = result.data;
+        }else if(result.error){
+            this.error = result.error;
+        }
+    }
+ 
+    callRowAction(event) {
+        const rowId = event.detail.row.Id; //Get RowId of particular Row from datatable
+        const actionName = event.detail.action.name;  //Get actionName of particular Row from datatable
+        if (actionName === 'Edit') {
+            this.handleAction(rowId, 'edit');
+        } else if (actionName === 'Delete') {
+            this.handleDeleteRow(rowId);
+        } else if (actionName === 'View') {
+            this.handleAction(rowId, 'view');
+        }
+    }
+
+    handleAction(recordId, mode) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: recordId,
+                objectApiName: 'Account',
+                actionName: mode
+            }
+        })
+    }
+
+    handleDeleteRow(recordIdToDelete) {
+        deleteRecord(recordIdToDelete)
+            .then(result => {
+                this.showToast('Success!!', 'Record deleted successfully!!', 'success', 'dismissable');
+                return refreshApex(this.wireResult);
+            }).catch(error => {
+                this.error = error;
+            });
+    }
+
+    showToast(title, message, variant, mode) {
+        const evt = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+            mode: mode
+        });
+        this.dispatchEvent(evt);
+    }
+    
+}
+```
+APEX Class
+```
+public without sharing class FetchRelatedContact {
+    //For MyProfile --> List of related Contact
+    @AuraEnabled(cacheable=true)
+    public static List<Contact> GetRelatedContacts(){ 
+        String currentUserName = UserInfo.getUserName();
+        List<Account> getAccounts = [Select Id, Name, Email__c From Account Where Email__c=:currentUserName];
+        List<Contact> getRelatedContacts = new List<Contact>();
+        for(Account acc: getAccounts){
+            List<Contact> addRelatedCon = [Select Id, Name, Phone, Email From Contact Where AccountId =: acc.Id];
+            getRelatedContacts.addAll(addRelatedCon);
+         }
+        return getRelatedContacts;
+    }
+}
+```
+

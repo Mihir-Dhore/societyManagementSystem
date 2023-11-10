@@ -1,4 +1,4 @@
-import { LightningElement, wire,api,track } from 'lwc';
+import { LightningElement, wire,track } from 'lwc';
 import GetRelatedContacts from '@salesforce/apex/SMSsearchEvent.GetRelatedContacts';
 import { NavigationMixin } from 'lightning/navigation';
 import { deleteRecord } from 'lightning/uiRecordApi';
@@ -46,7 +46,7 @@ const columns = [
     }
 ];
 
-export default class MyProfile extends LightningElement {
+export default class MyProfile extends NavigationMixin (LightningElement) {
 
     @track data;
     @track wireResult;
@@ -55,6 +55,7 @@ export default class MyProfile extends LightningElement {
 
      @wire(GetRelatedContacts)
     wiredContacts(result){
+        this.wireResult = result;
          if(result.data){
             this.data = result.data;
         }else if(result.error){
@@ -63,14 +64,14 @@ export default class MyProfile extends LightningElement {
     }
  
     callRowAction(event) {
-        const recId = event.detail.row.Id;
+        const rowId = event.detail.row.Id;
         const actionName = event.detail.action.name;
         if (actionName === 'Edit') {
-            this.handleAction(recId, 'edit');
+            this.handleAction(rowId, 'edit');
         } else if (actionName === 'Delete') {
-            this.handleDeleteRow(recId);
+            this.handleDeleteRow(rowId);
         } else if (actionName === 'View') {
-            this.handleAction(recId, 'view');
+            this.handleAction(rowId, 'view');
         }
     }
 
@@ -94,6 +95,7 @@ export default class MyProfile extends LightningElement {
                 this.error = error;
             });
     }
+
     showToast(title, message, variant, mode) {
         const evt = new ShowToastEvent({
             title: title,

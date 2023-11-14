@@ -1,5 +1,5 @@
 Parent To Child Relationship in LWC 
-Scenario:- When User Select Society From the Lookup Input Field from the Modal the it should show the Related Events to that Society
+Scenario:- When User Select Society From the Lookup Input Field from the Modal then it should show the Related Events to that Society
 
 Parent Component(SocietyModal Screen):
 HTML:

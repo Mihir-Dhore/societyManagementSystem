@@ -322,3 +322,9 @@ Apex class:-
  
     }
 ``
+Code for Stringify
+```
+        let arr = JSON.parse(JSON.stringify(result));
+
+```
+

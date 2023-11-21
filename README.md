@@ -318,13 +318,10 @@ Apex class:-
 
         }
         return 'Error';
-
- 
     }
 ``
 Code for Stringify
 ```
-        let arr = JSON.parse(JSON.stringify(result));
-
+                let arr = JSON.parse(JSON.stringify(result));
 ```
-
+ 

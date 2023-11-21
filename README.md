@@ -431,6 +431,8 @@ Trigger to Solve RollUp Summary Field Work - trigger to count Number of Account 
 
  ```
  Code to change the button label after changing the status to Unpaid to Paid--'Shortly when status change to 'Paid' the button is like 'Paid Already' and when the status is 'Unpaid' the button is like 'Mark As Paid'.
+
+ Javascript
  ```
 const columns = [
     { label: 'Amount', fieldName: 'Amount__c' },

@@ -20,7 +20,7 @@ export default class EventScreen extends LightningElement {
 
      //************************************For Society Modal-START*************************************************
 
-     @track showSocietyModal = true;
+     @track showSocietyModal = false;
      @track ShowEventScreen = false;
 
      connectedCallback(){
@@ -39,7 +39,7 @@ export default class EventScreen extends LightningElement {
              this.showSocietyModal = false;
              this.ShowEventScreen = true;
          }).catch((error)=>{
-            // this.showSocietyModal  = true;
+            this.showSocietyModal  = true;
           });
      }
 

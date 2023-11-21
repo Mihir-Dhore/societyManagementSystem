@@ -17,6 +17,10 @@ export default class HeaderScreen extends LightningElement {
         this.ShowMyProfile = true;
         this.showEventScreen = false;
     }
-     
+
+    @track showUtility = false;
+    handleUtility(){
+        this.showUtility = true;
+    }
 
 }

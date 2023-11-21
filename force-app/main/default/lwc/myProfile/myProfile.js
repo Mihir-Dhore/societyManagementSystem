@@ -73,24 +73,22 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
           //****************************For Add family member -START****************************
 
           //To show AccountInfo - Start
-          connectdCallback(){
+          connectedCallback(){
            this.loadAccountDetails();
           }
 
-          @track accname;
-    @track accountDat=[];
+          @track accountData;
 
 
     loadAccountDetails() {
         showAccount()
             .then(result => {
-                this.accountData = result.forEach(acc => {
-     this.accname =acc.Name;                 
-                });
-                console.log('sdskjsjkd',this.accountData)
+                let arr = JSON.parse(JSON.stringify(result));
+                console.log('Result is here',arr);
+                this.accountData =  arr;
             })
             .catch(error => {
-                console.error('Error', error);
+                console.log('Error happend', error);
             });
     }
           //To show AccountInfo-End
@@ -101,13 +99,13 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
         this.showForm = true;
      }
    
-      handleCreateContact(){
-        this.dispatchEvent(new ShowToastEvent({
-            title: "Family Member Added Successfully",
-             variant: "success"
-        }));
-        this.showForm = false;
-      }
+    //   handleCreateContact(){
+    //     this.dispatchEvent(new ShowToastEvent({
+    //         title: "Family Member Added Successfully",
+    //          variant: "success"
+    //     }));
+    //     this.showForm = false;
+    //   }
       handleCancel(){
         this.showForm = false;
       }
@@ -131,6 +129,13 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
      handleCreateContact(){
         createContact({firstName:this.firstName, lastName:this.lastName, email:this.email,phone:this.phone})
         .then((result)=>{
+
+            this.dispatchEvent(new ShowToastEvent({
+                title: "Family Member Added Successfully",
+                 variant: "success"
+            }));
+            this.showForm = false;
+
             console.log('Contact Created Succesfully:', result);
             return refreshApex(this.wireResult);
          })

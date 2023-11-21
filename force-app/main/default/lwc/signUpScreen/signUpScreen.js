@@ -42,12 +42,12 @@ export default class SignupForm extends NavigationMixin(LightningElement) {
                 Password: this.Password
             })
                 .then(result => {
-                    // Handle the result, you can show a success message or handle errors here
                     console.log(result);
                     this.dispatchEvent(new ShowToastEvent({
                         title: "Congratulations, Sign-up Successfully!",
                         variant: "success"
                     }));
+                    
             
                     
                     // window.location.href = "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/";

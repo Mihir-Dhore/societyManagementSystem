@@ -10,7 +10,7 @@
                         <h1  class="menu-item" onclick={handleEventClick} data-type="event">Event</h1>
                     </div>
                     <div class="utilities">
-                        <h1 class="menu-item" data-type="utilities">Utilities</h1>
+                        <h1 class="menu-item" onclick={handleUtility} data-type="utilities">Utilities</h1>
                     </div>
                     <div class="my-profile">
                         <h1 class="menu-item" onclick={handlemyProfileClick} data-type="myprofile">MyProfile</h1>
@@ -25,6 +25,10 @@
     </template>
     <template if:true={ShowMyProfile}>
         <c-my-profile></c-my-profile>
+    </template>
+    
+    <template if:true={showUtility}>
+        <c-utility-screen></c-utility-screen>
 
     </template>
 

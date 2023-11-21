@@ -1,5 +1,5 @@
 Parent To Child Relationship in LWC 
-Scenario:- When User Select Society From the Lookup Input Field from the Modal the it should show the Related Events to that Society
+Scenario:- When User Select Society From the Lookup Input Field from the Modal then it should show the Related Events to that Society
 
 Parent Component(SocietyModal Screen):
 HTML:
@@ -318,7 +318,169 @@ Apex class:-
 
         }
         return 'Error';
+    }
+```
+Code for Stringify
+```
+                let arr = JSON.parse(JSON.stringify(result));
+```
+
+Code For Refresh Apex
+```
+import { refreshApex } from '@salesforce/apex';
+return refreshApex(this.wireResult);
+```
+LWC Component to Delete Selected Record from the lwc-datatable after Clicking on 'Delete' Button.
+
+APEX:
+```
+public with sharing class AccountController {
+    @AuraEnabled(cacheable=true)
+    public static List<account>  getAccountList(){
+        return [SELECT Id, Name,Phone,Industry FROM Account order by createddate desc LIMIT 5];
+    }
+}
+```
+Javascript:
+```
+import { LightningElement, wire, track } from 'lwc';
+import { deleteRecord } from 'lightning/uiRecordApi';
+import { refreshApex } from '@salesforce/apex';
+
+import getLatestAccounts from '@salesforce/apex/AccountController.getAccountList';
+const COLS = [
+  { label: 'Name', fieldName: 'Name', type: 'text' },
+  { label: 'Stage', fieldName: 'Phone', type: 'text' },
+  { label: 'Amount', fieldName: 'Industry', type: 'text' }
+];
+export default class LwcRefreshApex extends LightningElement {
+  cols = COLS;
+  @track selectedRecord;
+  @track accountList = [];
+  @track error;
+  @track wiredAccountList = [];
+
+  @wire(getLatestAccounts) accList(result) {
+    this.wiredAccountList = result;
+
+    if (result.data) {
+      this.accountList = result.data;
+      this.error = undefined;
+    } else if (result.error) {
+      this.error = result.error;
+      this.accountList = [];
+    }
+  }
+
+  handelSelection(event) {
+    if (event.detail.selectedRows.length > 0) {
+      this.selectedRecord = event.detail.selectedRows[0].Id;
+    }
+  }
+  deleteRecord() {
+    deleteRecord(this.selectedRecord)
+      .then(() => {
+        refreshApex(this.wiredAccountList);
+      })
+      .catch(error => {
+      })
+  }
+}
+
+```
+HTML:
+```
+<template>  
+    <lightning-card title="Latest Five Accounts">  
+      <lightning-button slot="actions" label="Delete Account" onclick={deleteRecord}></lightning-button>  
+        <lightning-datatable  
+        data={accountList} columns={cols} key-field="Id" 
+        max-row-selection="1" onrowselection={handelSelection} >  
+        </lightning-datatable>  
+    </lightning-card>  
+  </template>
+
+```
+Trigger to Solve RollUp Summary Field Work - trigger to count Number of Account From Custom Object
+```
+ trigger SMSUpdateNumberOfFlatsOnAccount on Account (after insert, after update, after delete) {
+    Set<Id> societyIdsToUpdate = new Set<Id>();
+
+    if (Trigger.isInsert || Trigger.isUpdate) {
+        for (Account acc : Trigger.new) {
+            societyIdsToUpdate.add(acc.Society__c);
+        }
+    } else if (Trigger.isDelete) {
+        for (Account acc : Trigger.old) {
+            societyIdsToUpdate.add(acc.Society__c);
+        }
+    }
+
+    // Update Society records
+    List<Society__c> societiesToUpdate = new List<Society__c>();
+
+    for (Id societyId : societyIdsToUpdate) {
+        Society__c society = [SELECT Id, Number_of_Flats__c, (SELECT Id FROM Accounts__r) FROM Society__c WHERE Id = :societyId LIMIT 1];
+
+        society.Number_of_Flats__c = society.Accounts__r.size();
+        societiesToUpdate.add(society);
+    }
+
+    update societiesToUpdate;
+}
+
+ ```
+ Code to change the button label after changing the status to Unpaid to Paid--'Shortly when status change to 'Paid' the button is like 'Paid Already' and when the status is 'Unpaid' the button is like 'Mark As Paid'.
+
+ Javascript
+ ```
+const columns = [
+    { label: 'Amount', fieldName: 'Amount__c' },
+    { label: 'Society', fieldName: 'Society__c'},
+    { label: 'Status', fieldName: 'Status__c'},
+    { label: 'Utility Provider', fieldName: 'Utility_Provider__c'},
+ 
+    {
+        type: "button", label: 'Mark As Paid', initialWidth: 200, typeAttributes: {
+            // label: 'Mark As Paid',
+            label: { fieldName: 'buttonLabel' }, //Added dynamic label - This is For Button Functionality as make the label dynamic
+            name: 'MarkAsPaid',
+            title: 'MAP',
+            disabled: false,
+            // value: 'view',
+            iconPosition: 'left',
+            // iconName:'utility:preview',
+            variant:'Brand'
+        }
+    }
+    
+];
+
+export default class UtilityScreen extends LightningElement {
+
+    @track utilityData;
+    columns = columns;
+    connectedCallback(){
+        this.showUtilityDetails()
+    }
+    showUtilityDetails(){
+        showUtilityDetails()
+
+//In below map and ...Spread operator is for button functionality
+        .then(result=>{
+             this.utilityData = result.map(record =>({
+                ...record, //used to include all existing fields of each record in the new object
+                buttonLabel: record.Status__c === 'Paid' ? 'Already Paid' : 'Mark As Paid'
+            }));
+            return refreshApex(this.utilityData);
 
  
+    
+        })
+        .catch(error=>{
+            console.log(error,'error');
+        })
+    
     }
-``
+
+```

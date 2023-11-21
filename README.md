@@ -329,7 +329,76 @@ Code For Refresh Apex
 ```
 import { refreshApex } from '@salesforce/apex';
 return refreshApex(this.wireResult);
+```
+LWC Component to Delete Selected Record from the lwc-datatable after Clicking on 'Delete' Button.
 
+APEX:
+```
+public with sharing class AccountController {
+    @AuraEnabled(cacheable=true)
+    public static List<account>  getAccountList(){
+        return [SELECT Id, Name,Phone,Industry FROM Account order by createddate desc LIMIT 5];
+    }
+}
+```
+Javascript:
+```
+import { LightningElement, wire, track } from 'lwc';
+import { deleteRecord } from 'lightning/uiRecordApi';
+import { refreshApex } from '@salesforce/apex';
+
+import getLatestAccounts from '@salesforce/apex/AccountController.getAccountList';
+const COLS = [
+  { label: 'Name', fieldName: 'Name', type: 'text' },
+  { label: 'Stage', fieldName: 'Phone', type: 'text' },
+  { label: 'Amount', fieldName: 'Industry', type: 'text' }
+];
+export default class LwcRefreshApex extends LightningElement {
+  cols = COLS;
+  @track selectedRecord;
+  @track accountList = [];
+  @track error;
+  @track wiredAccountList = [];
+
+  @wire(getLatestAccounts) accList(result) {
+    this.wiredAccountList = result;
+
+    if (result.data) {
+      this.accountList = result.data;
+      this.error = undefined;
+    } else if (result.error) {
+      this.error = result.error;
+      this.accountList = [];
+    }
+  }
+
+  handelSelection(event) {
+    if (event.detail.selectedRows.length > 0) {
+      this.selectedRecord = event.detail.selectedRows[0].Id;
+    }
+  }
+  deleteRecord() {
+    deleteRecord(this.selectedRecord)
+      .then(() => {
+        refreshApex(this.wiredAccountList);
+      })
+      .catch(error => {
+      })
+  }
+}
+
+```
+HTML:
+```
+<template>  
+    <lightning-card title="Latest Five Accounts">  
+      <lightning-button slot="actions" label="Delete Account" onclick={deleteRecord}></lightning-button>  
+        <lightning-datatable  
+        data={accountList} columns={cols} key-field="Id" 
+        max-row-selection="1" onrowselection={handelSelection} >  
+        </lightning-datatable>  
+    </lightning-card>  
+  </template>
 
 ```
  

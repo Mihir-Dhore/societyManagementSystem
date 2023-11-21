@@ -324,4 +324,12 @@ Code for Stringify
 ```
                 let arr = JSON.parse(JSON.stringify(result));
 ```
+
+Code For Refresh Apex
+```
+import { refreshApex } from '@salesforce/apex';
+return refreshApex(this.wireResult);
+
+
+```
  

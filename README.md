@@ -430,4 +430,55 @@ Trigger to Solve RollUp Summary Field Work - trigger to count Number of Account 
 }
 
  ```
+ Code to change the button label after changing the status to Unpaid to Paid--'Shortly when status change to 'Paid' the button is like 'Paid Already' and when the status is 'Unpaid' the button is like 'Mark As Paid'.
+ ```
+const columns = [
+    { label: 'Amount', fieldName: 'Amount__c' },
+    { label: 'Society', fieldName: 'Society__c'},
+    { label: 'Status', fieldName: 'Status__c'},
+    { label: 'Utility Provider', fieldName: 'Utility_Provider__c'},
  
+    {
+        type: "button", label: 'Mark As Paid', initialWidth: 200, typeAttributes: {
+            // label: 'Mark As Paid',
+            label: { fieldName: 'buttonLabel' }, //Added dynamic label - This is For Button Functionality as make the label dynamic
+            name: 'MarkAsPaid',
+            title: 'MAP',
+            disabled: false,
+            // value: 'view',
+            iconPosition: 'left',
+            // iconName:'utility:preview',
+            variant:'Brand'
+        }
+    }
+    
+];
+
+export default class UtilityScreen extends LightningElement {
+
+    @track utilityData;
+    columns = columns;
+    connectedCallback(){
+        this.showUtilityDetails()
+    }
+    showUtilityDetails(){
+        showUtilityDetails()
+
+//In below map and ...Spread operator is for button functionality
+        .then(result=>{
+             this.utilityData = result.map(record =>({
+                ...record, //used to include all existing fields of each record in the new object
+                buttonLabel: record.Status__c === 'Paid' ? 'Already Paid' : 'Mark As Paid'
+            }));
+            return refreshApex(this.utilityData);
+
+ 
+    
+        })
+        .catch(error=>{
+            console.log(error,'error');
+        })
+    
+    }
+
+```

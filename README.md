@@ -522,7 +522,7 @@ export default class UtilityScreen extends LightningElement {
  
 
 ```
-Code to Add the Contact For Current Login Account Dynamically(To Add Family Member Functionality)
+Code to Add the Contact For Current Login User Account Dynamically(To Add Family Member Functionality)
 APEX CLASS:-
 ```
     @AuraEnabled

@@ -522,4 +522,50 @@ export default class UtilityScreen extends LightningElement {
  
 
 ```
+Code to Add the Contact For Current Login Account Dynamically(To Add Family Member Functionality)
+APEX CLASS:-
+```
+    @AuraEnabled
+    public static String createContact(String firstName,String lastName, String email, String phone){
+        
+        String currentUserName = UserInfo.getUserName();
+        List<Account> getAccounts = [Select Id,Name, Email__c From Account Where Email__c =:currentUserName];
+ 
+        if(getAccounts!=Null)
+        {
+               Contact newContact = new Contact();
+               newContact.AccountId = getAccounts[0].Id;
+                newContact.FirstName = firstName;
+                newContact.LastName = lastName;
+                newContact.Email = email;
+                newContact.Phone = phone;
+           
+               insert newContact;
+               return 'Contact Added Succesfully';
+
+        }
+        return 'Error';
+    }
+```
+Javascript:
+```
+     handleCreateContact(){
+        createContact({firstName:this.firstName, lastName:this.lastName, email:this.email,phone:this.phone})
+        .then((result)=>{
+
+            this.dispatchEvent(new ShowToastEvent({
+                title: "Family Member Added Successfully",
+                 variant: "success"
+            }));
+            this.showForm = false;
+
+            console.log('Contact Created Succesfully:', result);
+            return refreshApex(this.wireResult);
+         })
+        .catch(error=>{
+            console.error('Error Creating Contact: ', error);
+        })
+     }
+
+```
 

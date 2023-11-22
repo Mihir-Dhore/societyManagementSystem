@@ -484,3 +484,21 @@ export default class UtilityScreen extends LightningElement {
     }
 
 ```
+To Show the Custom Field Name Instead Of Id.
+
+HTML:
+```
+<p><b>Organizer:</b> {organizerName}</p>
+
+```
+Javascript:
+```
+     @track organizerName;
+//Add Below code where the data is fetch basically in Function where data is fetched & events is variable which iterate over the data in HTML
+
+             this.events = result.forEach(organizer=>{
+                this.organizerName = organizer.Contact__r.Name;
+
+            })
+
+```

@@ -568,4 +568,38 @@ Javascript:
      }
 
 ```
+Update Functionality:
+APEX:
+```
+    //Update the Status Value Of Utility Invoice as After Click on 'Mark as Lead'.
+@AuraEnabled
+public static String changeUtilityStatus() {
+    String currentUserName = UserInfo.getUserName();
+
+     List<Account> accList = [SELECT Id, Name, Email__c FROM Account WHERE Email__c = :currentUserName];
+
+     List<Utility_Invoice__c> utiList = [SELECT Id, Name, Account__c, Amount__c, Invoice_Date__c, 
+                                        Status__c,Utility_Provider__r.Name, Society__c, Society__r.Name 
+                                        FROM Utility_Invoice__c WHERE Account__c = :accList[0].Id];
+
+     Boolean unpaidFound = false;
+
+     for (Utility_Invoice__c utility : utiList) {
+         if (utility.Status__c == 'Unpaid' && utility.Status__c != null || utility.Amount__c != Null) {
+             utility.Status__c = 'Paid';
+             utility.Amount__c = 0;
+            unpaidFound = true;
+        }
+    }
+
+     update utiList;
+
+     if (unpaidFound) {
+        return 'Update Successfully';
+    } else {
+        return 'No Unpaid Invoices Found';
+    }
+}
+
+```
 

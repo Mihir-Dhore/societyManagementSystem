@@ -502,3 +502,24 @@ Javascript:
             })
 
 ```
+To Show the Custom Field Name Instead Of Id in Lightning Data Table.
+
+Javascript:
+```
+const columns = [
+     { label: 'Society', fieldName: 'SocietyName'},
+ ];
+export default class UtilityScreen extends LightningElement {
+@track utilityData;
+//Add where the data is fetched
+    showUtilityDetails(){
+        showUtilityDetails()
+        .then(result=>{
+
+              this.utilityData = result.map(record =>({
+                ...record, //used to include all existing fields of each record in the new object
+                SocietyName: record.Society__r.Name,// To show society name instead of Id.
+ 
+
+```
+

@@ -484,3 +484,122 @@ export default class UtilityScreen extends LightningElement {
     }
 
 ```
+To Show the Custom Field Name Instead Of Id.
+
+HTML:
+```
+<p><b>Organizer:</b> {organizerName}</p>
+
+```
+Javascript:
+```
+     @track organizerName;
+//Add Below code where the data is fetch basically in Function where data is fetched & events is variable which iterate over the data in HTML
+
+             this.events = result.forEach(organizer=>{
+                this.organizerName = organizer.Contact__r.Name;
+
+            })
+
+```
+To Show the Custom Field Name Instead Of Id in Lightning Data Table.
+
+Javascript:
+```
+const columns = [
+     { label: 'Society', fieldName: 'SocietyName'},
+ ];
+export default class UtilityScreen extends LightningElement {
+@track utilityData;
+//Add where the data is fetched
+    showUtilityDetails(){
+        showUtilityDetails()
+        .then(result=>{
+
+              this.utilityData = result.map(record =>({
+                ...record, //used to include all existing fields of each record in the new object
+                SocietyName: record.Society__r.Name,// To show society name instead of Id.
+ 
+
+```
+Code to Add the Contact For Current Login User Account Dynamically(To Add Family Member Functionality)
+APEX CLASS:-
+```
+    @AuraEnabled
+    public static String createContact(String firstName,String lastName, String email, String phone){
+        
+        String currentUserName = UserInfo.getUserName();
+        List<Account> getAccounts = [Select Id,Name, Email__c From Account Where Email__c =:currentUserName];
+ 
+        if(getAccounts!=Null)
+        {
+               Contact newContact = new Contact();
+               newContact.AccountId = getAccounts[0].Id;
+                newContact.FirstName = firstName;
+                newContact.LastName = lastName;
+                newContact.Email = email;
+                newContact.Phone = phone;
+           
+               insert newContact;
+               return 'Contact Added Succesfully';
+
+        }
+        return 'Error';
+    }
+```
+Javascript:
+```
+     handleCreateContact(){
+        createContact({firstName:this.firstName, lastName:this.lastName, email:this.email,phone:this.phone})
+        .then((result)=>{
+
+            this.dispatchEvent(new ShowToastEvent({
+                title: "Family Member Added Successfully",
+                 variant: "success"
+            }));
+            this.showForm = false;
+
+            console.log('Contact Created Succesfully:', result);
+            return refreshApex(this.wireResult);
+         })
+        .catch(error=>{
+            console.error('Error Creating Contact: ', error);
+        })
+     }
+
+```
+Update Functionality:
+APEX:
+```
+    //Update the Status Value Of Utility Invoice as After Click on 'Mark as Lead'.
+@AuraEnabled
+public static String changeUtilityStatus() {
+    String currentUserName = UserInfo.getUserName();
+
+     List<Account> accList = [SELECT Id, Name, Email__c FROM Account WHERE Email__c = :currentUserName];
+
+     List<Utility_Invoice__c> utiList = [SELECT Id, Name, Account__c, Amount__c, Invoice_Date__c, 
+                                        Status__c,Utility_Provider__r.Name, Society__c, Society__r.Name 
+                                        FROM Utility_Invoice__c WHERE Account__c = :accList[0].Id];
+
+     Boolean unpaidFound = false;
+
+     for (Utility_Invoice__c utility : utiList) {
+         if (utility.Status__c == 'Unpaid' && utility.Status__c != null || utility.Amount__c != Null) {
+             utility.Status__c = 'Paid';
+             utility.Amount__c = 0;
+            unpaidFound = true;
+        }
+    }
+
+     update utiList;
+
+     if (unpaidFound) {
+        return 'Update Successfully';
+    } else {
+        return 'No Unpaid Invoices Found';
+    }
+}
+
+```
+

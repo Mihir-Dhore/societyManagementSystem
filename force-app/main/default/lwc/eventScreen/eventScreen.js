@@ -53,10 +53,12 @@ export default class EventScreen extends LightningElement {
         this.showSocietyModal = false;
         this.ShowEventScreen = true;
      }
+     @track organizerName;
 
      SocietyAlreadyexist(){
          SearchEventsForAlreadyRagstered({AlreadyRagistered:this.SocietyExistContact})
          .then((result)=>{
+        
              let arr = JSON.parse(JSON.stringify(result));
              arr.forEach((item)=>{
                  if(item.Eligibility__c=='Registration Required'){
@@ -66,6 +68,12 @@ export default class EventScreen extends LightningElement {
                  }
              });
              this.events = arr;
+
+             //To Show the Organizer Name Instead of Id
+             this.events = result.forEach(organizer=>{
+                this.organizerName = organizer.Contact__r.Name;
+
+            })
          }).catch((error)={
 
          });

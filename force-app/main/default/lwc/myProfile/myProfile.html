@@ -1,5 +1,6 @@
 <template>
     <lightning-card>
+        <!-- ****************************To Show Account Details-Start***************************** -->
          <div style="padding-left: 15px;">
             <h1>Account Details</h1>
             <template if:true={accountData}>
@@ -12,6 +13,7 @@
                 </template>
             </template>
            </div>
+        <!-- ****************************To Show Account Details-End***************************** -->
 
         <template if:true={data}>      
                 <div style="display: flex; justify-content:right; margin:20px">
@@ -21,8 +23,8 @@
                     onclick={handleAddFamilyMemberClick} 
                   ></lightning-button>
                 </div>
-            <template if:true={showForm}>
 
+            <template if:true={showForm}>
                 <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container">
                     <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
@@ -49,8 +51,8 @@
                     </div>
                     </section>
                     <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
-    
             </template>
+            
             <lightning-datatable key-field="Id" data={data} columns={columns} hide-checkbox-column="true"
                 show-row-number-column="true" onrowaction={callRowAction}></lightning-datatable>
         </template>

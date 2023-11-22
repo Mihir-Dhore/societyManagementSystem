@@ -5,13 +5,13 @@ import changeUtilityStatus from '@salesforce/apex/SMSsearchEvent.changeUtilitySt
 import { refreshApex } from '@salesforce/apex';
 
 const columns = [
-    { label: 'Amount', fieldName: 'Amount__c' },
-    { label: 'Society', fieldName: 'Society__c'},
-    { label: 'Status', fieldName: 'Status__c'},
-    { label: 'Utility Provider', fieldName: 'Utility_Provider__c'},
+    { label: 'Amount', fieldName: 'Amount__c',initialWidth: 100 },
+    { label: 'Society', fieldName: 'SocietyName',initialWidth: 150},
+    { label: 'Status', fieldName: 'Status__c',initialWidth: 100},
+    { label: 'Utility Provider', fieldName: 'Utility_Provider__c',initialWidth: 150},
  
     {
-        type: "button", label: 'Mark As Paid', initialWidth: 200, typeAttributes: {
+        type: "button", label: 'Mark As Paid', initialWidth: 150, typeAttributes: {
             // label: 'Mark As Paid',
             label: { fieldName: 'buttonLabel' }, //Added dynamic label
             name: 'MarkAsPaid',
@@ -29,12 +29,12 @@ const columns = [
 export default class UtilityScreen extends LightningElement {
 
     @track utilityData;
-    columns = columns;
+    @track columns = columns;
     connectedCallback(){
         this.showUtilityDetails()
     }
 
-    @track dummy;
+    // @track dummy;
 
     showUtilityDetails(){
         showUtilityDetails()
@@ -47,6 +47,8 @@ export default class UtilityScreen extends LightningElement {
 
              this.utilityData = result.map(record =>({
                 ...record, //used to include all existing fields of each record in the new object
+                SocietyName: record.Society__r.Name,// To show society name instead of Id.
+                // UtilityProviderName: record.Utility_Provider__r.Name,
                 buttonLabel: record.Status__c === 'Paid' ? 'Already Paid' : 'Mark As Paid'
             }));
             return refreshApex(this.utilityData);

@@ -4,17 +4,13 @@ import { NavigationMixin } from 'lightning/navigation';
 import { deleteRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
-
 import createContact from '@salesforce/apex/SMSsearchEvent.createContact';
 import showAccount from '@salesforce/apex/SMSsearchEvent.showAccountDetails';
 
-
- 
-
 const columns = [
-    { label: 'Name', fieldName: 'Name' },
-    { label: 'Phone', fieldName: 'Phone' },
-    { label: 'Email', fieldName: 'Email' },
+    { label: 'Name', fieldName: 'Name',initialWidth: 100 },
+    { label: 'Phone', fieldName: 'Phone',initialWidth: 100 },
+    { label: 'Email', fieldName: 'Email',initialWidth: 100 },
     {
         type: "button", label: 'View', initialWidth: 100, typeAttributes: {
             label: 'View',
@@ -99,13 +95,6 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
         this.showForm = true;
      }
    
-    //   handleCreateContact(){
-    //     this.dispatchEvent(new ShowToastEvent({
-    //         title: "Family Member Added Successfully",
-    //          variant: "success"
-    //     }));
-    //     this.showForm = false;
-    //   }
       handleCancel(){
         this.showForm = false;
       }
@@ -145,6 +134,9 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
      }
 
           //****************************For Add family member -END****************************
+
+
+   //****************************For EDIT,VIEW and DELETE Buttons -Start****************************
 
     callRowAction(event) {
         const rowId = event.detail.row.Id;
@@ -189,5 +181,6 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
         this.dispatchEvent(evt);
     }
     
+   //****************************For EDIT,VIEW and DELETE Buttons -End****************************
 
 }

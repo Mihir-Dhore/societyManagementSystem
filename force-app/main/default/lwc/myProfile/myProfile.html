@@ -36,8 +36,8 @@
                     </div>
                     <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
  
-                    <lightning-input label="First Name" value={firstName} onchange={handleFirstNameChange}></lightning-input>
-                <lightning-input label="Last Name" value={lastName} onchange={handleLastNameChange}></lightning-input>
+                    <lightning-input label="First Name" value={firstName} onchange={handleFirstNameChange} required></lightning-input>
+                <lightning-input label="Last Name" value={lastName} onchange={handleLastNameChange} required></lightning-input>
                 <lightning-input label="Email" type="email" value={email} onchange={handleEmailChange}></lightning-input>
                 <lightning-input label="Phone" type="phone" value={phone} max-length="10" onchange={handlePhoneChange}></lightning-input>
 

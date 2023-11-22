@@ -1,26 +1,37 @@
 import { LightningElement, api, track,wire } from 'lwc';
 import SMS from '@salesforce/resourceUrl/SMS';
-
-export default class HeaderScreen extends LightningElement {
+import { NavigationMixin } from 'lightning/navigation';
+export default class HeaderScreen extends NavigationMixin (LightningElement) {
 
     SMS = SMS;
   
     
-    @track showEventScreen = false;
     handleEventClick(){
-        this.showEventScreen = true;
-
+        this[NavigationMixin.Navigate]({
+            type: "standard__webPage",
+            attributes: {
+               url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/"
+            }
+        });
+ 
     }
 
-    @track ShowMyProfile = false;
     handlemyProfileClick(){
-        this.ShowMyProfile = true;
-        this.showEventScreen = false;
+        this[NavigationMixin.Navigate]({
+            type: "standard__webPage",
+            attributes: {
+               url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/my-profile-page"
+            }
+        });
     }
 
-    @track showUtility = false;
-    handleUtility(){
-        this.showUtility = true;
-    }
+     handleUtility(){
+        this[NavigationMixin.Navigate]({
+            type: "standard__webPage",
+            attributes: {
+               url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/utility-page"
+            }
+        });
+     }
 
 }

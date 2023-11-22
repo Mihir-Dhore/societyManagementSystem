@@ -43,35 +43,21 @@ export default class SignupForm extends NavigationMixin(LightningElement) {
             })
                 .then(result => {
                     console.log(result);
-                    this.dispatchEvent(new ShowToastEvent({
-                        title: "Congratulations, Sign-up Successfully!",
-                        variant: "success"
-                    }));
-                    
-            
-                    
-                    // window.location.href = "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/";
+                    this[NavigationMixin.Navigate]({
+                        type: "standard__webPage",
+                        attributes: {
+                           url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/login"
+                        }
+                    });
 
+ 
                 })
                 .catch(error => {
                     // Handle errors here
                     console.error(error);
                 });
 
-                this.dispatchEvent(new ShowToastEvent({
-                    title: "Congralations, Sign-up Successfully!",
-                    // message: "Check Your Mail to Set Password",
-                    variant: "success"
-                }));
-
-                // this[NavigationMixin.Navigate]({
-                //     type: "standard__webPage",
-                //     attributes: {
-                //        url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/login"
-                //     }
-                // });
-    
-    
+     
 
                 
     

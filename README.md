@@ -435,15 +435,15 @@ Trigger to Solve RollUp Summary Field Work - trigger to count Number of Account 
  Javascript
  ```
 const columns = [
-    { label: 'Amount', fieldName: 'Amount__c' },
-    { label: 'Society', fieldName: 'Society__c'},
-    { label: 'Status', fieldName: 'Status__c'},
-    { label: 'Utility Provider', fieldName: 'Utility_Provider__c'},
+    { label: 'Amount', fieldName: 'Amount__c',initialWidth: 100 },
+    { label: 'Society', fieldName: 'SocietyName',initialWidth: 150},
+    { label: 'Status', fieldName: 'Status__c',initialWidth: 100},
+    { label: 'Utility Provider', fieldName: 'UtilityProviderName',initialWidth: 150},
  
     {
-        type: "button", label: 'Mark As Paid', initialWidth: 200, typeAttributes: {
+        type: "button", label: 'Mark As Paid', initialWidth: 150, typeAttributes: {
             // label: 'Mark As Paid',
-            label: { fieldName: 'buttonLabel' }, //Added dynamic label - This is For Button Functionality as make the label dynamic
+            label: { fieldName: 'buttonLabel' }, //Added dynamic label
             name: 'MarkAsPaid',
             title: 'MAP',
             disabled: false,
@@ -468,14 +468,13 @@ export default class UtilityScreen extends LightningElement {
 
 //In below map and ...Spread operator is for button functionality
         .then(result=>{
-             this.utilityData = result.map(record =>({
+                this.utilityData = result.map(record =>({
                 ...record, //used to include all existing fields of each record in the new object
+                SocietyName: record.Society__r.Name,// To show society name instead of Id.
+                UtilityProviderName: record.Utility_Provider__r.Name,
                 buttonLabel: record.Status__c === 'Paid' ? 'Already Paid' : 'Mark As Paid'
             }));
             return refreshApex(this.utilityData);
-
- 
-    
         })
         .catch(error=>{
             console.log(error,'error');

@@ -8,7 +8,7 @@ const columns = [
     { label: 'Amount', fieldName: 'Amount__c',initialWidth: 100 },
     { label: 'Society', fieldName: 'SocietyName',initialWidth: 150},
     { label: 'Status', fieldName: 'Status__c',initialWidth: 100},
-    { label: 'Utility Provider', fieldName: 'Utility_Provider__c',initialWidth: 150},
+    { label: 'Utility Provider', fieldName: 'UtilityProviderName',initialWidth: 150},
  
     {
         type: "button", label: 'Mark As Paid', initialWidth: 150, typeAttributes: {
@@ -34,27 +34,21 @@ export default class UtilityScreen extends LightningElement {
         this.showUtilityDetails()
     }
 
+ 
     // @track dummy;
-
-    showUtilityDetails(){
+    showUtilityDetails(event){
         showUtilityDetails()
         .then(result=>{
-
         // this.utilityData = result.forEach(bill => {
-        //     this.dummy =bill.Society__r.Name;
-            
+        //     this.dummy =bill.Society__r.Name;    
         // });
-
              this.utilityData = result.map(record =>({
                 ...record, //used to include all existing fields of each record in the new object
                 SocietyName: record.Society__r.Name,// To show society name instead of Id.
-                // UtilityProviderName: record.Utility_Provider__r.Name,
+                UtilityProviderName: record.Utility_Provider__r.Name,
                 buttonLabel: record.Status__c === 'Paid' ? 'Already Paid' : 'Mark As Paid'
             }));
             return refreshApex(this.utilityData);
-
- 
-    
         })
         .catch(error=>{
             console.log(error,'error');
@@ -62,15 +56,16 @@ export default class UtilityScreen extends LightningElement {
     
     }
 
+    @track rowId;
     callRowAction(event) {
-        const rowId = event.detail.row.Id; //Get RowId of particular Row from datatable
-        console.log('RowId', this.rowId)
+        this.rowId = event.detail.row.Id; //Get RowId of particular Row from datatable
+        console.log('RowId get', this.rowId)
         const actionName = event.detail.action.name;  //Get actionName of particular Row from datatable
-        console.log('actionName', this.actionName)
+        console.log('actionName',actionName);
 
         if (actionName === 'MarkAsPaid') {
-            console.log('MarkAsPaid DONEEEE')
-            changeUtilityStatus()
+            console.log('MarkAsPaid DONEEEE',this.rowId)
+            changeUtilityStatus({rowId:this.rowId})
             .then(result =>{
                 console.log('Status Updated Successfully',result);
                 this.showUtilityDetails();

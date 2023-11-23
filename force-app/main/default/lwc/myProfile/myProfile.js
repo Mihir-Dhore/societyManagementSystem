@@ -1,11 +1,12 @@
 import { LightningElement, api,wire,track } from 'lwc';
 import GetRelatedContacts from '@salesforce/apex/SMSsearchEvent.GetRelatedContacts';
 import { NavigationMixin } from 'lightning/navigation';
-import { deleteRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 import createContact from '@salesforce/apex/SMSsearchEvent.createContact';
 import showAccount from '@salesforce/apex/SMSsearchEvent.showAccountDetails';
+import deleteRelatedContactOnUtility from '@salesforce/apex/SMSsearchEvent.deleteRelatedContactOnUtility';
+
 
 const columns = [
     { label: 'Name', fieldName: 'Name',initialWidth: 100 },
@@ -99,7 +100,7 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
         this.showForm = false;
       }
 
-      @track firstName = '';
+     @track firstName = '';
      @track lastName = '';
      @track email = '';
      @track phone = '';
@@ -140,11 +141,21 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
 
     callRowAction(event) {
         const rowId = event.detail.row.Id;
+        console.log('RowId',rowId);
         const actionName = event.detail.action.name;
         if (actionName === 'Edit') {
             this.handleAction(rowId, 'edit');
         } else if (actionName === 'Delete') {
-            this.handleDeleteRow(rowId);
+            deleteRelatedContactOnUtility({contactId:rowId})
+            .then(result => {
+                this.dispatchEvent(new ShowToastEvent({
+                    message: "Record deleted Successfully",
+                    variant: "success"
+                }));
+                return refreshApex(this.wireResult);
+            }).catch(error => {
+                this.error = error;
+            });
         } else if (actionName === 'View') {
             this.handleAction(rowId, 'view');
         }
@@ -159,16 +170,6 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
                 actionName: mode
             }
         })
-    }
-
-    handleDeleteRow(recordIdToDelete) {
-        deleteRecord(recordIdToDelete)
-            .then(result => {
-                this.showToast('Success!!', 'Record deleted successfully!!', 'success', 'dismissable');
-                return refreshApex(this.wireResult);
-            }).catch(error => {
-                this.error = error;
-            });
     }
 
     showToast(title, message, variant, mode) {

@@ -21,7 +21,7 @@ export default class EventScreen extends LightningElement {
      //************************************For Society Modal-START*************************************************
 
      @track showSocietyModal = false;
-     @track ShowEventScreen = false;
+     @track ShowEventScreen = true;
 
      connectedCallback(){
         this.CheckCurrentUserSocietyField();
@@ -32,14 +32,19 @@ export default class EventScreen extends LightningElement {
      CheckCurrentUserSocietyField(){
          CheckCurrentUserSociety()
          .then((result)=>{
-             this.SocietyExistContact=result;
-             console.log(this.SocietyExistContact);
-             this.SocietyAlreadyexist();
+            if(result ==='False')
+            {
+                this.showSocietyModal  = true;
 
-             this.showSocietyModal = false;
-             this.ShowEventScreen = true;
+            }else{
+                this.SocietyExistContact=result;
+                console.log(this.SocietyExistContact);
+                this.SocietyAlreadyexist();
+   
+                this.showSocietyModal = false;
+            }
+
          }).catch((error)=>{
-            this.showSocietyModal  = true;
           });
      }
 
@@ -51,7 +56,6 @@ export default class EventScreen extends LightningElement {
         this.SocietyAlreadyexist();
        
         this.showSocietyModal = false;
-        this.ShowEventScreen = true;
      }
      @track organizerName;
 
@@ -74,7 +78,7 @@ export default class EventScreen extends LightningElement {
                 this.organizerName = organizer.Contact__r.Name;
 
             })
-         }).catch((error)={
+         }).catch(error=>{
 
          });
          

@@ -83,14 +83,20 @@
                                                 </header>
                                                 <!-- Modal/Popup Box LWC body starts here -->
                                                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                                                    <lightning-input type="checkbox"
+                                                     <!-- <lightning-input type="checkbox"
                                                         label="Are you Sure, You want to Register For the Program"
                                                         name="input1"
                                                         value={checkboxValue}
                                                         onchange={handleCheckboxChange}>
-                                                    </lightning-input>
-                                                    <div class="slds-text-color_error slds-m-top_small" if:true={checkboxError}>
-                                                        Please check the checkbox to Register.
+                                                    </lightning-input> -->
+
+                                                    <div key={con.Id} >
+                                                            <lightning-datatable
+                                                            key-field="id"
+                                                            data={contactdata}
+                                                            columns={cols}
+                                                            onrowselection={handleRowSelection}
+                                                          ></lightning-datatable>
                                                     </div>
                                                 </div>
                                                 <!-- Modal/Popup Box LWC footer starts here -->

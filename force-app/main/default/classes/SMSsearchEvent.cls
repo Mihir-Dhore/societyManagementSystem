@@ -40,38 +40,36 @@ public without sharing class SMSsearchEvent {
     return 'Account or User not found, or other issues occurred.';
 }
     
-    // current user Register for events
-@AuraEnabled
-public static String registerForEvent(String eventId) {
+    // current user Register for events  
+    @AuraEnabled
+ public static String registerForEvent(String eventId, String selectedRowsId) {
     String currentUserName = UserInfo.getUserName();
+    
+    // Query for the contact based on selectedRowsId
+    List<Contact> conList = [SELECT Id, FirstName, LastName, Email FROM Contact WHERE Id = :selectedRowsId LIMIT 1];
+    
+    if (!conList.isEmpty()) {
+        // Check if the contact is already registered for the event
+        List<Event_Registration__c> existingRegistrations = [SELECT Id FROM Event_Registration__c WHERE Event__c = :eventId AND Contact__c = :conList[0].Id LIMIT 1];
 
-    List<Event_Registration__c> eventRegistrations = [SELECT Event__c, Email__c, Contact__c FROM Event_Registration__c WHERE Event__c = :eventId AND Email__c = :currentUserName];
+        if (existingRegistrations.isEmpty()) {
+            // If not registered, create a new registration
+            Event_Registration__c eventRegistration = new Event_Registration__c();
+            eventRegistration.Event__c = eventId;
+            eventRegistration.Contact__c = conList[0].Id;
+            eventRegistration.Email__c = conList[0].Email;
+            
+            insert eventRegistration;
 
-    if (eventRegistrations.size() > 0) {
-        return 'Already Registered';
+            return 'Contact Added Successfully';
         } else {
-        List<Contact> ListOfAllContact =[SELECT Id From Contact where Email =:currentUserName];  
-        if (eventRegistrations.isEmpty()) {
-            Event_Registration__c newRegistration = new Event_Registration__c();
-            newRegistration.Event__c = eventId;
-            newRegistration.Email__c = currentUserName;
-            newRegistration.Contact__c =ListOfAllContact[0].Id;
-            insert newRegistration;
-            return 'User Registered Successfully';
+            return 'Contact is already registered for the event';
         }
+    } else {
+        return 'Contact not found';
     }
-
-    return 'User Not Registered';
-}   
-    
-    //To Select Society
-  /*  @AuraEnabled
-    public static List<Event__c> selectSociety(String eventId) {
-    
-    return [SELECT Id, Name, Date_and_Time__c, Eligibility__c, Event_Image__c, Location__c, Contact__r.Name, Society__r.Name FROM Event__c WHERE Society__c = :eventId];
-}
-*/    
-    //To Check is user already registered or not
+} 
+     //To Check is user already registered or not
     @AuraEnabled
     public static String checkUserRegistrationForEvent(String eventId){
         String currentUserName = UserInfo.getUserName();
@@ -81,8 +79,29 @@ public static String registerForEvent(String eventId) {
         } 
         return 'Please Register';
     }
-   
-   
+ 
+    /*
+   //To add Family Member of Login User.
+    @AuraEnabled
+    public static list<Contact> getFamilyMemberInRegiScreen(String eventId){
+        List<Contact> addContact = new List<Contact>();
+       String currentUserName = UserInfo.getUserName();
+        List<Event_Registration__c> eventRegList = [Select Id, Event__c, Email__c From Event_Registration__c Where Email__c =: currentUserName AND Event__c =: eventId];
+        if (eventRegList.isEmpty()) 
+        {
+            List<Account> accList = [Select Id, Name,Email__c From Account where Email__c =:currentUserName];
+            for(Account acc:accList)
+            {
+                List<Contact> conList = [Select Id,Name, Email From Contact Where AccountId=:acc.Id];
+                addContact.addAll(conList);
+            }
+            
+        }
+             return addContact;
+      
+        
+    }  
+    */
     //For MyProfile --> List of related Contact
     @AuraEnabled(cacheable=true)
     public static List<Contact> GetRelatedContacts(){ 
@@ -127,13 +146,13 @@ public static String registerForEvent(String eventId) {
     return accList;
 }
 
-    //Show the Utility Invoice Details
+    //Show the Utility Payment Details
     @AuraEnabled
-    public static list<Utility_Invoice__c> showUtilityDetails(){
+    public static list<Utility_Payment__c> showUtilityDetails(){
         String currentUserName = UserInfo.getUserName();
         
         List<Account> accList = [Select Id, Name, Email__c From Account Where Email__c =:currentUserName];
-        List<Utility_Invoice__c> utiList = [Select Id,Name, Account__c,Amount__c,Invoice_Date__c,Status__c,Utility_Provider__c,Utility_Provider__r.Name,Society__c,Society__r.Name From Utility_Invoice__c Where Account__c =: accList[0].Id ];
+        List<Utility_Payment__c> utiList = [Select Id,Name, Account__c,Account__r.Name,Amount__c,Status__c,Utility_Provider__c,Utility_Provider__r.Name From Utility_Payment__c Where Account__c =: accList[0].Id ];
         return utiList;
     }
 
@@ -144,13 +163,13 @@ public static String changeUtilityStatus(String rowId) {
 
      List<Account> accList = [SELECT Id, Name, Email__c FROM Account WHERE Email__c = :currentUserName];
 
-     List<Utility_Invoice__c> utiList = [SELECT Id, Name, Account__c, Amount__c, Invoice_Date__c, 
-                                        Status__c,Utility_Provider__r.Name, Society__c, Society__r.Name 
-                                        FROM Utility_Invoice__c WHERE Account__c = :accList[0].Id AND Id =:rowId];
+     List<Utility_Payment__c> utiList = [SELECT Id, Name, Account__c, Amount__c,
+                                        Status__c,Utility_Provider__r.Name 
+                                        FROM Utility_Payment__c WHERE Account__c = :accList[0].Id AND Id =:rowId];
 
      Boolean unpaidFound = false;
 
-     for (Utility_Invoice__c utility : utiList) {
+     for (Utility_Payment__c utility : utiList) {
          if (utility.Status__c == 'Unpaid' && utility.Status__c != null || utility.Amount__c != Null) {
              utility.Status__c = 'Paid';
           //   utility.Amount__c = 0;
@@ -174,5 +193,33 @@ public static String changeUtilityStatus(String rowId) {
             delete conList;
             return 'Deleted successfully!';
              
+    }
+    
+    //To Show Maintainace Request Data
+    @AuraEnabled
+    public static list<Maintenance_Request__c> showMaintenanceRequestData(){
+        String currentUserName = UserInfo.getUserName();
+        List<Account> accList = [Select Id, Name, Email__c From Account where Email__c=:currentUserName];
+        List<Maintenance_Request__c> maintenanceList = [Select Id, Name, Description__c,Account__c,Society__r.Name,Status__c,Contact__r.Name From Maintenance_Request__c Where Account__c=:accList[0].Id ];
+        return maintenanceList;
+    }
+    
+    @AuraEnabled
+    public static String insertMaintainanceReq( String description){
+        String currentUserName = UserInfo.getUserName();
+        List<Account> accList = [Select Id, Name, Society__c,Email__c From Account where Email__c=:currentUserName];
+        if(accList!=Null)
+         {
+            Maintenance_Request__c mainReq = new Maintenance_Request__c();
+            mainReq.Account__c =  accList[0].Id;
+            mainReq.Description__c = description;
+            mainReq.Society__c = accList[0].Society__c;
+             
+            insert mainReq;
+            return 'Inserted Succesfully';
+            
+       }
+        return 'Error Occrured';
+         
     }
 }

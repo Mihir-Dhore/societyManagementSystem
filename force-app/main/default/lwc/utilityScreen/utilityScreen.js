@@ -5,15 +5,18 @@ import changeUtilityStatus from '@salesforce/apex/SMSsearchEvent.changeUtilitySt
 import { refreshApex } from '@salesforce/apex';
 
 const columns = [
-    { label: 'Amount', fieldName: 'Amount__c',initialWidth: 100 },
-    { label: 'Society', fieldName: 'SocietyName',initialWidth: 150},
-    { label: 'Status', fieldName: 'Status__c',initialWidth: 100},
-    { label: 'Utility Provider', fieldName: 'UtilityProviderName',initialWidth: 150},
+    { label: 'Amount', fieldName: 'Amount__c',initialWidth: 250 },
+    { label: 'Account', fieldName: 'accountName',initialWidth: 250},
+    // { label: 'Society', fieldName: 'SocietyName',initialWidth: 150},
+    { label: 'Status', fieldName: 'Status__c',initialWidth: 250},
+    { label: 'Utility Provider', fieldName: 'utilityProvider',initialWidth: 250},
+ 
  
     {
         type: "button", label: 'Mark As Paid', initialWidth: 150, typeAttributes: {
             // label: 'Mark As Paid',
-            label: { fieldName: 'buttonLabel' }, //Added dynamic label
+            // label: { fieldName: 'buttonLabel' }, //Added dynamic label
+            label: 'Mark As Read',
             name: 'MarkAsPaid',
             title: 'MAP',
             disabled: false,
@@ -42,12 +45,20 @@ export default class UtilityScreen extends LightningElement {
         // this.utilityData = result.forEach(bill => {
         //     this.dummy =bill.Society__r.Name;    
         // });
-             this.utilityData = result.map(record =>({
-                ...record, //used to include all existing fields of each record in the new object
-                SocietyName: record.Society__r.Name,// To show society name instead of Id.
-                UtilityProviderName: record.Utility_Provider__r.Name,
-                buttonLabel: record.Status__c === 'Paid' ? 'Already Paid' : 'Mark As Paid'
-            }));
+         
+        this.utilityData = result.map(record=>({
+            ...record,
+            accountName: record.Account__r ? record.Account__r.Name : '',
+            utilityProvider: record.Utility_Provider__r ? record.Utility_Provider__r.Name : '',
+
+        })); 
+        // console.log('utilityData',utilityData);
+            //  this.utilityData = result.map(record =>({
+            //     ...record, //used to include all existing fields of each record in the new object
+            //     // SocietyName: record.Society__r.Name,// To show society name instead of Id.
+            //     UtilityProviderName: record.Utility_Provider__r.Name,
+            //     buttonLabel: record.Status__c === 'Paid' ? 'Already Paid' : 'Mark As Paid'
+            // }));
             return refreshApex(this.utilityData);
         })
         .catch(error=>{

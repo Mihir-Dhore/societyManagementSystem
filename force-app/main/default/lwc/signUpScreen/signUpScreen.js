@@ -1,14 +1,14 @@
-import { LightningElement,track,wire } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { LightningElement,track } from 'lwc';
+// import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation';
 import createAccountAndContact from '@salesforce/apex/SMSSignUpLogin.createAccountAndContact'
  
 export default class SignupForm extends NavigationMixin(LightningElement) {
-    @track firstName = '';
-    @track lastName = '';
-    @track email = '';
-    @track Phone = '';
-    @track Password = '';
+    @track firstName;
+    @track lastName ;
+    @track email;
+    @track Phone;
+    @track Password;
 
     handleFirstNameChange(event) {
         this.firstName = event.target.value;
@@ -33,7 +33,6 @@ export default class SignupForm extends NavigationMixin(LightningElement) {
     //Signup Functionality
          handleSignup() 
          {
-            
             createAccountAndContact({
                 firstName: this.firstName,
                 lastName: this.lastName,
@@ -42,7 +41,7 @@ export default class SignupForm extends NavigationMixin(LightningElement) {
                 Password: this.Password
             })
                 .then(result => {
-                    console.log(result);
+                    console.log('REsult',result);
                     this[NavigationMixin.Navigate]({
                         type: "standard__webPage",
                         attributes: {
@@ -55,11 +54,7 @@ export default class SignupForm extends NavigationMixin(LightningElement) {
                 .catch(error => {
                     // Handle errors here
                     console.error(error);
-                });
-
-     
-
-                
+                });        
     
         }
         handleLoginHereClick(event)
@@ -72,4 +67,6 @@ export default class SignupForm extends NavigationMixin(LightningElement) {
             });
         }
      
+ 
+
  }

@@ -7,8 +7,13 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import CheckCurrentUserSociety from '@salesforce/apex/SMSsearchEvent.isCurrentUserSocietyEmpty';
 import SearchEventsForAlreadyRagstered from '@salesforce/apex/SMSsearchEvent.SearchEventsForAlreadyRagstered';
 import UpdateSocietyOnAccount from '@salesforce/apex/SMSsearchEvent.UpdateAccountSociety';
-import checkUserRegistrationForEvent from '@salesforce/apex/SMSsearchEvent.checkUserRegistrationForEvent';
+// import checkUserRegistrationForEvent from '@salesforce/apex/SMSsearchEvent.checkUserRegistrationForEvent';
+import GetRelatedContacts from '@salesforce/apex/SMSsearchEvent.GetRelatedContacts';
+// import getFamilyMemberInRegiScreen from '@salesforce/apex/SMSsearchEvent.getFamilyMemberInRegiScreen';
 
+const COLS = [
+    {label: 'Name',fieldName:'Name'},
+];
 export default class EventScreen extends LightningElement {
  
      @track events = [];
@@ -100,38 +105,68 @@ export default class EventScreen extends LightningElement {
 
           @track isModalOpen = false;
 
+          cols = COLS;
+          @track contactdata;
           handleRegister(event){
+            this.getRelatedContact();
             this.eventId = event.currentTarget.dataset.eventId;
-            checkUserRegistrationForEvent({eventId:this.eventId})
-            .then((result)=>{
-                if(result=='Already Registered'){
-                    this.dispatchEvent(new ShowToastEvent({
-                        title: "Already Registered",
-                        variant: "warning"
-                    }));
-                }else{
-                    this.isModalOpen = true;
+            // getFamilyMemberInRegiScreen({eventId:this.eventId})
+            // .then((result)=>{
+            //     console.log('re',result);
 
-                }
-            })
+            //     this.contactdata = result;
+            //     console.log('fdds',this.contactdata);
+
+               this.isModalOpen = true;
+
+                // if(!this.contactdata){
+                //     this.dispatchEvent(new ShowToastEvent({
+                //         title: "Already Registered",
+                //         variant: "warning"
+                //     }));
+                // }else{
+                //     this.isModalOpen = true;
+                //     const arr = JSON.stringify(result);
+                //     console.log(arr,'result');
+
+                // }
+            // })
+           }
+
+
+           getRelatedContact(){
+            GetRelatedContacts()
+                .then(result=>{
+                    this.contactdata = result;
+                    console.log('result',result);
+                }).catch(error=>{
+                    console.log(error);
+                })
+            
            }
            
           closeModal(){
             this.isModalOpen = false;
           }
         //For YES button
+
+        @track selectedRows;
+         @track selectedRowsId;
+
+        handleRowSelection(event) {
+            const selectedRows = event.detail.selectedRows;
+            for (let i = 0; i < selectedRows.length; i++){
+                // alert("You selected: " + selectedRows[i].Id);
+                this.selectedRowsId = selectedRows[i].Id
+                 
+            }
+        }
             submitYesDetails()
             {
-                console.log("eventId",this.eventId)
-                if(this.checkboxValue == false)
-                {
-                    this.checkboxError = true;
-                    console.log('Checkbox not selected');
+                    console.log('eventId',this.eventId);
+                    console.log('selectedRowsId',this.selectedRowsId);
 
-                } else{
-                    console.log('Checkbox selected');
-
-                    registerForEvent({eventId: this.eventId })
+                    registerForEvent({eventId: this.eventId,selectedRowsId:this.selectedRowsId})
                     .then(result => {
                         alert(result)
                         console.log('result', result);
@@ -142,7 +177,7 @@ export default class EventScreen extends LightningElement {
                         console.error('Error registering for the event:', error.body.message);
                     });
                 }     
-            }
+            // }
 
 
           //************************************For Registration Modal-END*************************************************

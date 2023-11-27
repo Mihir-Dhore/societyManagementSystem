@@ -2,7 +2,9 @@
     background-color: #f4f6f9;
     display: flex;
     justify-content: space-between;
-    padding: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
 }
 .innerheader{
     display: flex;
@@ -15,6 +17,11 @@
 }
 .utilities{
     margin-right: 2rem;
+}
+.maintainanceRequest{
+    margin-right: 2rem;
+    /* margin-left: 2rem; */
+
 }
  
 .menu-item {

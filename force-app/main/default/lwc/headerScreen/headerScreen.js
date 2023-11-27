@@ -25,6 +25,14 @@ export default class HeaderScreen extends NavigationMixin (LightningElement) {
         });
     }
 
+    handlemyMaintainanceReqClick(){
+        this[NavigationMixin.Navigate]({
+            type: "standard__webPage",
+            attributes: {
+               url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/maintenance-request-page"
+            }
+        });
+    }
      handleUtility(){
         this[NavigationMixin.Navigate]({
             type: "standard__webPage",

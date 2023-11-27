@@ -1,9 +1,7 @@
 <template>
-         <lightning-card title="Home Screen" variant="base">
-            <div class="main">
+             <div class="main">
                 <div class="sms">
-                     <img  style="height: 50px; display:flex;" class="img" src={SMS} alt="SMS-Logo">                
-
+                     <!-- <img  style="height: 50px; display:flex;" class="img" src={SMS} alt="SMS-Logo">                 -->
                 </div>
                 <div class="innerheader">
                     <div class="event">
@@ -12,14 +10,15 @@
                     <div class="utilities">
                         <h1 class="menu-item" onclick={handleUtility} data-type="utilities">Utilities</h1>
                     </div>
+                    <div class="maintainanceRequest">
+                        <h1 class="menu-item" onclick={handlemyMaintainanceReqClick} data-type="maintainanceReq">Maintainance Request</h1>
+                    </div>
                     <div class="my-profile">
                         <h1 class="menu-item" onclick={handlemyProfileClick} data-type="myprofile">MyProfile</h1>
                     </div>
-    
                 </div>
             </div>
-        </lightning-card>
- 
+  
     <template if:true={showEventScreen}>
         <c-event-screen></c-event-screen>
     </template>

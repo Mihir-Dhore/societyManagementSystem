@@ -42,4 +42,13 @@ export default class HeaderScreen extends NavigationMixin (LightningElement) {
         });
      }
 
+     handlefeedbackClick(){
+        this[NavigationMixin.Navigate]({
+            type: "standard__webPage",
+            attributes: {
+               url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/feedback-page"
+            }
+        });
+     }
+
 }

@@ -23,6 +23,12 @@
     /* margin-left: 2rem; */
 
 }
+.feedback{
+    margin-right: 2rem;
+}
+.my-profile{
+    margin-right: 1rem;
+}
  
 .menu-item {
     cursor: pointer;

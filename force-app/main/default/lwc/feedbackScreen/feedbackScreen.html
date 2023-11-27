@@ -1,0 +1,44 @@
+<template>
+    <lightning-input 
+      value={name}
+      onchange={handleNameChange}
+      type="text"
+      label="Name"
+      placeholder="Enter Name"
+      required
+    ></lightning-input>
+
+ 
+    <!-- <lightning-input 
+      value={email}
+      onchange={handleEmailChange}
+      type="email"
+      label="Email"
+      placeholder="Enter Email"
+    ></lightning-input>
+    <lightning-input 
+    value={phone}
+    onchange={handlePhoneChange}
+    type="phone"
+    label="Phone"
+    placeholder="Enter Contact Number"
+  ></lightning-input> -->
+
+  <lightning-textarea
+    value={description}
+    onchange={handleDescriptionChange}
+    label="Description"
+    placeholder="Type here..."
+    rows="4" 
+    required
+  ></lightning-textarea> <br><br>
+
+  <div style="text-align:center">
+    <lightning-button
+    variant="brand"
+    label="Submit" 
+    onclick={handleSubmitClick} 
+  ></lightning-button>
+  </div>
+
+</template>

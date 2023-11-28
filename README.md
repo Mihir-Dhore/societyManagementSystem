@@ -601,4 +601,57 @@ public static String changeUtilityStatus() {
 }
 
 ```
+Trigger to Send Email once the User registered for the Event(after insert)
+```
+trigger SMSEventRegistration on Event_Registration__c (after insert) {
+    List<Messaging.SingleEmailMessage> emailList = new List<Messaging.SingleEmailMessage>();
+
+   for (Event_Registration__c er : Trigger.new) {
+       if(er.Email__c != null){
+       Messaging.SingleEmailMessage emailMsg = new Messaging.SingleEmailMessage();
+       String[] toAddresses = new String[] { er.Email__c };
+       emailMsg.setToAddresses(toAddresses);
+
+       emailMsg.setSubject('Register Successfully!!!');
+
+       String emailBody = 'Dear ' + er.Resident__c + ',<br/><br/>' +
+           'You Have Successfully Registered for the Event.<br/>'   +          
+            'Thank you!!!';
+
+       emailMsg.setHtmlBody(emailBody);
+       emailList.add(emailMsg);
+       }
+   }
+   Messaging.sendEmail(emailList);
+
+}
+```
+Trigger to Send Email once the User add the Maintainance Request (after insert)
+```
+trigger SMSMaintainceReqSendMail on Maintenance_Request__c (after insert) {
+   
+    List<Messaging.SingleEmailMessage> emailMessages = new List<Messaging.SingleEmailMessage>();
+
+   for (Maintenance_Request__c request : Trigger.New) {
+       
+       String subject = 'New Maintenance Request Created';
+       String body = 'A new maintenance request has been created:\n\n';
+       body += 'Request Details:\n';
+       body += 'Description: ' + request.Description__c + '\n';
+       body += 'Date: ' + System.Today();
+     
+       String currentUserEmail = UserInfo.getUserEmail();
+
+       Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+       email.setSubject(subject);
+       email.setPlainTextBody(body);
+       email.setToAddresses(new String[]{currentUserEmail}); 
+
+       emailMessages.add(email);
+   }
+
+   Messaging.sendEmail(emailMessages);
+
+}
+```
 

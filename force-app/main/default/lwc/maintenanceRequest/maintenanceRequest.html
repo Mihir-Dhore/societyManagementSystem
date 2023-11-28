@@ -1,6 +1,7 @@
 <template>
+    <div class="main">
 
-    <lightning-button variant="success" label="Add Maintainence Request" onclick={handleMaintainenceClick}></lightning-button>
+    <lightning-button style="display:flex; justify-content:right" variant="Brand" label="Add Maintainence Request" onclick={handleMaintainenceClick}></lightning-button> <br>
 
    <lightning-datatable
      key-field="id"
@@ -40,4 +41,5 @@
             </section>
             <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
     </template>
+</div>
 </template>

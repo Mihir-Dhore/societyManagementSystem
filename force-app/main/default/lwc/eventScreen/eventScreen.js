@@ -2,7 +2,8 @@ import { LightningElement,track, api,wire} from 'lwc';
 // import findEvents from '@salesforce/apex/SMSsearchEvent.selectSociety';
 import registerForEvent from '@salesforce/apex/SMSsearchEvent.registerForEvent';
 // import checkRegistration from '@salesforce/apex/SMSsearchEvent.checkRegistration';
- 
+import { NavigationMixin } from 'lightning/navigation';
+
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import CheckCurrentUserSociety from '@salesforce/apex/SMSsearchEvent.isCurrentUserSocietyEmpty';
 import SearchEventsForAlreadyRagstered from '@salesforce/apex/SMSsearchEvent.SearchEventsForAlreadyRagstered';
@@ -14,14 +15,13 @@ import GetRelatedContacts from '@salesforce/apex/SMSsearchEvent.GetRelatedContac
 const COLS = [
     {label: 'Name',fieldName:'Name'},
 ];
-export default class EventScreen extends LightningElement {
+export default class EventScreen extends NavigationMixin(LightningElement) {
  
      @track events = [];
      @track eventId;
      @track error;
      @track errorMessage = '';
-  
-
+     @track societyName;
 
      //************************************For Society Modal-START*************************************************
 
@@ -70,6 +70,7 @@ export default class EventScreen extends LightningElement {
         
              let arr = JSON.parse(JSON.stringify(result));
              arr.forEach((item)=>{
+                this.societyName = item.Society__r.Name;
                  if(item.Eligibility__c=='Registration Required'){
                     item["Registrationrequired"] = true;
                  }else{
@@ -215,5 +216,18 @@ export default class EventScreen extends LightningElement {
     registerFamily(){
         this.showRegisteFamily = true;
         this.ShowEventScreen = false;
+    }
+
+
+
+
+    //To click on Society Name
+    handleSocietyClick(){
+        this[NavigationMixin.Navigate]({
+            type: "standard__webPage",
+            attributes: {
+               url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/society-info-screen"
+            }
+        });
     }
 }

@@ -9,9 +9,9 @@ import deleteRelatedContactOnUtility from '@salesforce/apex/SMSsearchEvent.delet
 
 
 const columns = [
-    { label: 'Name', fieldName: 'Name',initialWidth: 100 },
-    { label: 'Phone', fieldName: 'Phone',initialWidth: 100 },
-    { label: 'Email', fieldName: 'Email',initialWidth: 100 },
+    { label: 'Name', fieldName: 'Name',initialWidth: 150 },
+    { label: 'Phone', fieldName: 'Phone',initialWidth: 150 },
+    { label: 'Email', fieldName: 'Email',initialWidth: 150 },
     {
         type: "button", label: 'View', initialWidth: 100, typeAttributes: {
             label: 'View',

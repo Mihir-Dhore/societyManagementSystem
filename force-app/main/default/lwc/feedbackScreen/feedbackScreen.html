@@ -1,4 +1,6 @@
 <template>
+  <div class="main">
+
     <lightning-input 
       value={name}
       onchange={handleNameChange}
@@ -7,22 +9,6 @@
       placeholder="Enter Name"
       required
     ></lightning-input>
-
- 
-    <!-- <lightning-input 
-      value={email}
-      onchange={handleEmailChange}
-      type="email"
-      label="Email"
-      placeholder="Enter Email"
-    ></lightning-input>
-    <lightning-input 
-    value={phone}
-    onchange={handlePhoneChange}
-    type="phone"
-    label="Phone"
-    placeholder="Enter Contact Number"
-  ></lightning-input> -->
 
   <lightning-textarea
     value={description}
@@ -40,5 +26,6 @@
     onclick={handleSubmitClick} 
   ></lightning-button>
   </div>
+</div>
 
 </template>

@@ -1,0 +1,122 @@
+<template>
+    <template for:each={societyData} for:item="society">
+        <div class="card society-card" onclick={handleCardClick} key={society.Id}>
+            <div class="society-details">
+                <p><Strong>Society Name: </Strong>{society.Name}</p>
+                <p><Strong>Society Type: </Strong>{society.Society_Type__c}</p>
+                <p><Strong>Number of Flats: </Strong>{society.Number_of_Flats__c}</p>
+                <p><Strong>City: </Strong>{society.City__c}</p>
+                <p><Strong>Address: </Strong>{society.Address__c}</p>
+           </div> 
+           <div class="buttons">
+                 <lightning-button 
+                   variant="base"
+                   label="View Society Member" 
+                   onclick={handleMemberClick} 
+                 ></lightning-button><br> 
+
+                 <lightning-button 
+                 variant="base"
+                 label="View Society Staff" 
+                 onclick={handleViewSocietyStaffClick} 
+               ></lightning-button> <br>
+
+               <lightning-button 
+               variant="base"
+               label="View Amenities" 
+               onclick={handleAmenitiesClick} 
+             ></lightning-button>
+           </div>
+        </div>
+
+
+        <template if:true={showMember}>
+            <div class="list-container" key={society.Id}>
+                <br> <h1>Society Member List</h1> <br>
+            
+            <table key={society.Id} class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th scope="col">Flat No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone</th>
+                     </tr>
+                </thead>
+                <tbody>
+                    <template for:each={accountData} for:item="account">
+                        <tr key={account.Id}>
+                            <td>{account.Flat_Number__c}</td>
+                            <td data-recordid={account.Id}  style="cursor: pointer;" onclick={handleAccName}>{account.Name}</td>
+                            <td>{account.Email__c}</td>
+                            <td>{account.Phone}</td>
+                         </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        </template>
+        
+        <!-- </template> -->
+
+        <template if:true={showStaff}>
+            <div class="list-container" key={society.Id}>
+               <br> <h1>Society Staff List</h1> <br>
+
+            <table key={society.Id} class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th scope="col">Name</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Society</th>
+                     </tr>
+                </thead>
+                <tbody>
+                    <template for:each={societyStaffData} for:item="staff">
+                        <tr key={staff.Id}>
+                            <td>{staff.Name}</td>
+                            <td>{staff.Staff_Role__c}</td>
+                            <td>{staff.Phone__c}</td>
+                            <td>{staff.Email__c}</td>
+                            <td>{staff.Society__r.Name}</td>
+
+                         </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        </template>
+        
+
+        <template if:true={showAmenities}>
+            <div class="list-container" key={society.Id}>
+                <br> <h1>Society Member List</h1> <br>
+            
+            <table key={society.Id} class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Availability</th>
+                        <th scope="col">Booking Rule</th>
+                     </tr>
+                </thead>
+                <tbody>
+                    <template for:each={showAmenitiesData} for:item="amenity">
+                        <tr key={amenity.Id}>
+                            <td>{amenity.Name}</td>
+                            <td rowspan="3">{amenity.Description__c}</td>
+                            <td>{amenity.Availability__c}</td>
+                            <td>{amenity.Booking_Rule__c}</td>
+                         </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        </template>
+        
+
+    </template>
+ </template>

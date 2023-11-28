@@ -7,6 +7,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 const columns = [
     { label: 'Description', fieldName: 'Description__c',initialWidth: 500},
     { label: 'Society', fieldName: 'societyName'},
+    { label: 'Requested Date', fieldName: 'Request_Date__c' },
     { label: 'Status', fieldName: 'Status__c' },
     // { label: 'Requested By', fieldName: 'requestedBy' },
  ];
@@ -56,10 +57,10 @@ export default class MaintenanceRequest extends LightningElement {
     handleDescriptions(event){
         this.description = event.target.value;
      }
-    handleSave(){
+ 
+     handleSave(){
         insertMaintainanceReq({description:this.description})
         .then(result=>{
-            // this.maintainenceData  = result;
             console.log('Added Successfully',result);
             
             this.dispatchEvent(new ShowToastEvent({

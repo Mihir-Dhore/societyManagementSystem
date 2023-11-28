@@ -1,8 +1,10 @@
 <template>
+    <div class="mainn">
+
     <template if:true={ShowEventScreen}>
-        <lightning-card title="Event Screen" variant="base">
-            <div style="padding-left: 15px;padding-right: 15px;">
-                <h1 class="Heading">Upcoming Society Events <br>🎇🥂🎄</h1>
+             <div style="padding-left: 15px;padding-right: 15px;">
+                <h1 class="Heading">Upcoming Society Events</h1>
+                <h1 style="cursor: pointer;" onclick={handleSocietyClick} class="stylish-header">--- {societyName} ---</h1>
             </div>
             <!-- <div class="searchBox">
                 <lightning-input onchange={handlekeyEvent} value={searchKey} class="search-bar" type="search"
@@ -12,7 +14,6 @@
                 <ul>
                     <template for:each={events} for:item="event">
                         <div key={event.id}>
-
                             <div class="Content">
                                 <div>
                                     <h3 style="font-family: Courier;font-size: 20px; "
@@ -43,8 +44,7 @@
                                     </div>
                                     <br>
                                     <div class="innerContent">
-
-                                        <p><b>Society:</b> {event.Society__r.Name}</p>
+                                        <p style="cursor: pointer;" onclick={handleSocietyClick}><b>Society:</b>  {event.Society__r.Name}</p>
                                         <p><b>Eligibility:</b> {event.Eligibility__c}</p>
                                          <!-- <p><b>Organizer:</b> {event.Contact__c}</p> -->
                                         <p><b>Organizer:</b> {organizerName}</p>
@@ -117,8 +117,7 @@
                     </template>
                 </ul>
             </div>
-        </lightning-card>
-    </template>
+     </template>
 
     <template if:true={showRegisteFamily}>
         <c-event-registration-screen></c-event-registration-screen>
@@ -151,5 +150,6 @@
            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div> 
         
          </template>
-     
+        </div>
+
 </template>

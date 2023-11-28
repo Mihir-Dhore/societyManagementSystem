@@ -1,7 +1,8 @@
 <template>
-    <lightning-card>
-        <!-- ****************************To Show Account Details-Start***************************** -->
-         <div style="padding-left: 15px;">
+         <!-- ****************************To Show Account Details-Start***************************** -->
+         <div class="main">
+
+         <div >
             <h1>Account Details</h1>
             <template if:true={accountData}>
                 <template for:each={accountData} for:item="account">
@@ -59,5 +60,6 @@
         <template if:true={error}>
             {error}
         </template>
-    </lightning-card>
-</template>
+    </div>
+
+ </template>

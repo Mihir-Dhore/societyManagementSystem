@@ -1,0 +1,51 @@
+/* .main {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+} */
+
+ .card {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+
+    background-color: #f0f0f0;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+    background-color: rgb(203, 230, 131);
+    transform: scale(1.02);
+}
+
+.society-details {
+    width: 60%;
+    font-size: 16x;
+}
+
+.buttons {
+    width: 35%;
+    text-align: right;
+}
+
+.list-container {
+    margin-top: 20px;
+}
+
+ .responsive-table {
+    width: 100%;
+}
+
+ 
+.description-cell {
+    max-height: 80px; /* Adjust the maximum height as needed */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+

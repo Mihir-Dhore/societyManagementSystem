@@ -200,10 +200,10 @@ public static String changeUtilityStatus(String rowId) {
     public static list<Maintenance_Request__c> showMaintenanceRequestData(){
         String currentUserName = UserInfo.getUserName();
         List<Account> accList = [Select Id, Name, Email__c From Account where Email__c=:currentUserName];
-        List<Maintenance_Request__c> maintenanceList = [Select Id, Name, Description__c,Account__c,Society__r.Name,Status__c,Contact__r.Name From Maintenance_Request__c Where Account__c=:accList[0].Id ];
+        List<Maintenance_Request__c> maintenanceList = [Select Id, Name, Description__c,Account__c,Request_Date__c,Society__r.Name,Status__c,Contact__r.Name From Maintenance_Request__c Where Account__c=:accList[0].Id ];
         return maintenanceList;
     }
-    
+    //To insert Maintainance Request Data
     @AuraEnabled
     public static String insertMaintainanceReq( String description){
         String currentUserName = UserInfo.getUserName();
@@ -214,6 +214,7 @@ public static String changeUtilityStatus(String rowId) {
             mainReq.Account__c =  accList[0].Id;
             mainReq.Description__c = description;
             mainReq.Society__c = accList[0].Society__c;
+            mainReq.Request_Date__c = System.Today();
              
             insert mainReq;
             return 'Inserted Succesfully';
@@ -222,4 +223,69 @@ public static String changeUtilityStatus(String rowId) {
         return 'Error Occrured';
          
     }
+    
+    //for Feedback Screen
+    @AuraEnabled
+    public static String insertFeedback(String name, String description){
+        String currentUserName = UserInfo.getUserName();
+        //String currentUserName = 'sw.saurabhwarge@gmail.com';
+        List<Account> accList = [Select Id, Society__c,Name, Email__c From Account Where Email__c =: currentUserName];
+        List<Contact> conList = [Select Id, Name, Society__c from Contact Where AccountId=: accList[0].Id And Email =: accList[0].Email__c];
+        if(accList!=Null){
+            List<Feedback__c> feedList = [Select Id, Name, Description__c,Society__c From Feedback__c Where Society__c=:accList[0].Society__c And Contact__c=: conList[0].Id];
+             
+            Feedback__c feedback = new Feedback__c();
+            if(!feedList.isEmpty()){
+                return 'Already Submitted';
+            }else{
+                feedback.Name = name;
+                feedback.Description__c = description;
+                feedback.Submission_Date__c = System.Today();
+                feedback.Society__c = accList[0].Society__c;
+                feedback.Contact__c = conList[0].Id;
+                insert feedback;
+                return 'Feedback Added Successfully';
+            }   
+        }
+        return 'Error Occured';
+    }
+    
+    //To show Society Info
+    @AuraEnabled
+    public Static List<Society__c> showSocietyInfo(){
+        String currentUserName = UserInfo.getUserName();
+        List<Account> accList = [Select Id,Society__r.Name, Name From Account Where Email__c=:currentUserName];
+        List<Society__c>societyList = [Select Id,Name,City__c,Address__c,Number_of_Flats__c,Society_Type__c from Society__c Where Name=:accList[0].Society__r.Name];
+        return societyList;
+    }
+    
+    //Show Account List Related to Society on Society Screen
+    @AuraEnabled
+    public static List<Account> accountListRelatedToSociety(){
+        String currentUserName = UserInfo.getUserName();
+         List<Account> accList = [Select Id,Name,Email__c,Society__c From Account Where Email__c=:currentUserName];
+        
+         List<Account> showAccList = [Select Id, Name, Email__c,Flat_Number__c,Phone, Society__c From Account Where Society__c =: accList[0].Society__c];
+         return showAccList;
+    }
+    
+    //Show Society Staff related to Society
+    @AuraEnabled
+    public static List<Society_Staff__c> showSocietyStaff(){
+        String currentUserName = UserInfo.getUserName();
+        List<Account>accList = [Select Id,Name,Society__c From Account Where Email__c=:currentUserName];
+        List<Society_Staff__c> societyStaffList = [Select Id,Name,Staff_Role__c, Phone__c,Email__c,Society__r.Name From Society_Staff__c where Society__c=:accList[0].Society__c];
+        return societyStaffList;
+    }
+    
+    //Show Amenities
+    @AuraEnabled
+    public static List<Amenity__c>showAmenities(){
+        String currentUserName = UserInfo.getUserName();
+        List<Account> accList = [Select Id,Name,Society__c From Account Where Email__c =: currentUserName];
+        List<Amenity__c> ameList = [Select Id, Name,Description__c,Availability__c,Society__c,Maintenance_Schedule__c,Booking_Rule__c from Amenity__c Where Society__c=: accList[0].Society__c ];
+        return ameList;
+        
+    }
+    
 }

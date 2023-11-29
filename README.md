@@ -713,6 +713,144 @@ showUtilityDetails(event){
 
         })); 
 ```
+Header Code LWC:
+HTML:
+```
+ <div class="mainn">
+    <nav>
+        <div class="stylish-header">
+            <a class="links logo" href="#">SMS</a>
+            <div class="rightSection">
+                <div class="menu-toggle" onclick={toggleMenu}>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    
+                </div>
+                <div class="menu-items">
+                    <h1 class="menu-item" onclick={handleEventClick} data-type="event">Event</h1>
+                    <h1 class="menu-item" onclick={handleUtility} data-type="utilities">Utilities</h1>
+                    <h1 class="menu-item" onclick={handlemyMaintainanceReqClick} data-type="maintainanceReq">Maintenance Request</h1>
+                    <h1 class="menu-item" onclick={handlefeedbackClick} data-type="feedback">Feedback</h1>
+                    <h1 class="menu-item" onclick={handlemyProfileClick} data-type="myprofile">MyProfile</h1>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+```
+CSS:
+```
+* {
+   box-sizing: border-box;
+}
+
+nav {
+   overflow: hidden;
+   background-color: #f4f6f9;
+   padding: 10px;
+}
+
+.menu-item {
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   font-weight: bold;
+   float: left;
+   color: black;
+   text-align: center;
+   padding: 12px;
+   text-decoration: none;
+   font-size: 15px;
+   line-height: 25px;
+   border-radius: 4px;
+}
+
+nav .logo {
+   font-size: 25px;
+   font-weight: bold;
+}
+
+nav .menu-item.selected {
+   background-color: rgb(214, 238, 77);
+   color: rgb(42, 10, 94);
+}
+
+nav .menu-item:hover {
+   background-color: rgb(214, 238, 77);
+   color: rgb(42, 10, 94);
+}
+
+nav .selected {
+   background-color: dodgerblue;
+   color: white;
+}
+
+.rightSection {
+   float: right;
+}
+
+.menu-toggle {
+   display: none;
+   cursor: pointer;
+   padding: 10px;
+}
+
+.menu-toggle .bar {
+   height: 3px;
+   width: 25px;
+   background-color: #333;
+   margin: 5px 0;
+}
+
+.menu-items {
+   display: flex;
+   align-items: center;
+   z-index: 1;/* For Mobile View */
+}
+
+/* For Mobile View */
+@media screen and (max-width: 600px) {
+   .menu-item {
+       display: block;
+   }
+
+   .menu-toggle {
+       display: block;
+   }
+
+   .menu-items {
+       flex-direction: column;
+       position: absolute;
+       top: 61px;
+       left: 0;
+       width: 100%;
+       background-color: #f4f6f9;
+       display: none;
+   }
+
+   .menu-items.show {
+       display: flex;
+   }
+}
+/* For Mobile View */
+
+.mainn {
+   background-color: #f0f0f0;
+   border: 1px solid #e7cece;
+   border-radius: 4px;
+   padding: 5px;
+}
+```
+JS:
+```
+    toggleMenu(event) {
+        console.log('toggleMenu called');
+        const menuItems = this.template.querySelector('.menu-items');
+        if (menuItems) {
+            menuItems.classList.toggle('show');
+        }
+    }
+
+```
 
 
 

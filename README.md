@@ -654,4 +654,63 @@ trigger SMSMaintainceReqSendMail on Maintenance_Request__c (after insert) {
 
 }
 ```
+Code to Disable Normal Button
+HTML:
+```
+    <lightning-input 
+      type="text"
+      label="Enter some text"
+      onchange={handleInput}
+      value={field1}
+    ></lightning-input>
+
+    <lightning-button 
+      variant="brand"
+      label="Button Label" 
+      onclick={handleClick} 
+      disabled={disableBtn}
+    ></lightning-button>
+```
+JS:
+```
+    @track field1;
+    @track disableBtn;
+    handleInput(event){
+        this.field1 = event.target.value;
+        this.disableBtn = !this.field1;
+    }
+
+```
+Code to Disable lwc Datatable Button
+JS:
+```
+{
+        type: "button", label: 'Mark As Paid', initialWidth: 150, typeAttributes: {
+            // label: 'Mark As Paid',
+            // label: { fieldName: 'buttonLabel' }, //Added dynamic label
+            label: 'Mark As Read',
+            name: 'MarkAsPaid',
+            title: 'MAP',
+            disabled: {fieldName:'MarkAsPaid'}, //Only this line for button
+            // value: 'view',
+            iconPosition: 'left',
+            // iconName:'utility:preview',
+            variant:'Brand'
+        }
+
+
+showUtilityDetails(event){
+        showUtilityDetails()
+        .then(result=>{
+         
+        this.utilityData = result.map(record=>({
+            ...record,
+            accountName: record.Account__r ? record.Account__r.Name : '',
+            utilityProvider: record.Utility_Provider__r ? record.Utility_Provider__r.Name : '',
+            MarkAsPaid: record.Status__c ==='Paid', //this line for button
+
+        })); 
+```
+
+
 

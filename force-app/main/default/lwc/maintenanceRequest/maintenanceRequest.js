@@ -33,13 +33,7 @@ export default class MaintenanceRequest extends LightningElement {
                 // requestedBy: record.Contact__c ? record.Contact__r.Name : ''
             }));
             
-            // console.log(result,'sd')
-            // this.maintainenceData = result.map(record=>({
-            //     ...record,
-            //     societyName: record.Society__r.Name,
-            //     requestedBy: record.Contact__r.Name,
-            // }))
-            // console.log('REsult',this.maintainenceData);
+         
         }).catch(error=>{
             console.log('Error',error);
         })
@@ -68,7 +62,8 @@ export default class MaintenanceRequest extends LightningElement {
                  variant: "success"
             }));
             this.showMaintainenceForm = false;
-            return refreshApex(this.maintainenceData);
+            this.showMaintainaceDetails();
+            // return refreshApex(this.maintainenceData);
     
         }).catch(error=>{
             console.log('Error',error);

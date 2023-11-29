@@ -4,8 +4,15 @@ import { NavigationMixin } from 'lightning/navigation';
 export default class HeaderScreen extends NavigationMixin (LightningElement) {
 
     SMS = SMS;
-  
-    
+    toggleMenu(event) {
+        console.log('toggleMenu called');
+        const menuItems = this.template.querySelector('.menu-items');
+        if (menuItems) {
+            menuItems.classList.toggle('show');
+        }
+    }
+        
+
     handleEventClick(){
         this[NavigationMixin.Navigate]({
             type: "standard__webPage",
@@ -13,7 +20,6 @@ export default class HeaderScreen extends NavigationMixin (LightningElement) {
                url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/"
             }
         });
- 
     }
 
     handlemyProfileClick(){
@@ -23,6 +29,7 @@ export default class HeaderScreen extends NavigationMixin (LightningElement) {
                url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/my-profile-page"
             }
         });
+ 
     }
 
     handlemyMaintainanceReqClick(){
@@ -32,6 +39,7 @@ export default class HeaderScreen extends NavigationMixin (LightningElement) {
                url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/maintenance-request-page"
             }
         });
+ 
     }
      handleUtility(){
         this[NavigationMixin.Navigate]({
@@ -40,6 +48,7 @@ export default class HeaderScreen extends NavigationMixin (LightningElement) {
                url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/utility-page"
             }
         });
+ 
      }
 
      handlefeedbackClick(){
@@ -49,6 +58,8 @@ export default class HeaderScreen extends NavigationMixin (LightningElement) {
                url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/feedback-page"
             }
         });
+ 
      }
+
 
 }

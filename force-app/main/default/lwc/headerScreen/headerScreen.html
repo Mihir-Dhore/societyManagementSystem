@@ -1,18 +1,26 @@
 <template>
-        <div class="mainn">
-            <nav>
-                <div class="stylish-header">
-                  <a class="links logo" href="#">`SMS`</a>
-                  <div class="rightSection">
+  <div class="mainn">
+    <nav>
+        <div class="stylish-header">
+            <a class="links logo" href="#">SMS</a>
+            <div class="rightSection">
+                <div class="menu-toggle" onclick={toggleMenu}>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    
+                </div>
+                <div class="menu-items">
                     <h1 class="menu-item" onclick={handleEventClick} data-type="event">Event</h1>
                     <h1 class="menu-item" onclick={handleUtility} data-type="utilities">Utilities</h1>
                     <h1 class="menu-item" onclick={handlemyMaintainanceReqClick} data-type="maintainanceReq">Maintenance Request</h1>
                     <h1 class="menu-item" onclick={handlefeedbackClick} data-type="feedback">Feedback</h1>
                     <h1 class="menu-item" onclick={handlemyProfileClick} data-type="myprofile">MyProfile</h1>
-                  </div>
                 </div>
-              </nav>
             </div>
+        </div>
+    </nav>
+</div>
 
     <template if:true={showEventScreen}>
         <c-event-screen></c-event-screen>

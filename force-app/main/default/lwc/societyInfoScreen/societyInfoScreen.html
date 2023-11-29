@@ -1,4 +1,6 @@
 <template>
+    <h1 style="font-size: medium; text-align:center">--- Society Information ---</h1>
+
     <template for:each={societyData} for:item="society">
         <div class="card society-card" onclick={handleCardClick} key={society.Id}>
             <div class="society-details">
@@ -92,7 +94,7 @@
 
         <template if:true={showAmenities}>
             <div class="list-container" key={society.Id}>
-                <br> <h1>Society Member List</h1> <br>
+                <br> <h1>Society Amenities </h1> <br>
             
             <table key={society.Id} class="slds-table slds-table_bordered slds-table_cell-buffer">
                 <thead>

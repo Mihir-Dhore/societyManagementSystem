@@ -19,7 +19,7 @@ const columns = [
             label: 'Mark As Read',
             name: 'MarkAsPaid',
             title: 'MAP',
-            disabled: false,
+            disabled: {fieldName:'MarkAsPaid'},
             // value: 'view',
             iconPosition: 'left',
             // iconName:'utility:preview',
@@ -38,18 +38,29 @@ export default class UtilityScreen extends LightningElement {
     }
 
  
+
+    
+    // let arr = JSON.parse(JSON.stringify(result));
+    // arr.forEach((item)=>{
+    //    this.societyName = item.Society__r.Name;
+    //     if(item.Eligibility__c=='Registration Required'){
+    //        item["Registrationrequired"] = true;
+    //     }else{
+    //        item["Registrationrequired"] = false;
+    //     }
+    // });
+    // this.events = arr;
+
     // @track dummy;
     showUtilityDetails(event){
         showUtilityDetails()
         .then(result=>{
-        // this.utilityData = result.forEach(bill => {
-        //     this.dummy =bill.Society__r.Name;    
-        // });
          
         this.utilityData = result.map(record=>({
             ...record,
             accountName: record.Account__r ? record.Account__r.Name : '',
             utilityProvider: record.Utility_Provider__r ? record.Utility_Provider__r.Name : '',
+            MarkAsPaid: record.Status__c ==='Paid',
 
         })); 
         // console.log('utilityData',utilityData);
@@ -59,6 +70,7 @@ export default class UtilityScreen extends LightningElement {
             //     UtilityProviderName: record.Utility_Provider__r.Name,
             //     buttonLabel: record.Status__c === 'Paid' ? 'Already Paid' : 'Mark As Paid'
             // }));
+
             return refreshApex(this.utilityData);
         })
         .catch(error=>{
@@ -86,4 +98,5 @@ export default class UtilityScreen extends LightningElement {
             })
         }  
     }
+
 }

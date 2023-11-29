@@ -12,6 +12,8 @@ import UpdateSocietyOnAccount from '@salesforce/apex/SMSsearchEvent.UpdateAccoun
 import GetRelatedContacts from '@salesforce/apex/SMSsearchEvent.GetRelatedContacts';
 // import getFamilyMemberInRegiScreen from '@salesforce/apex/SMSsearchEvent.getFamilyMemberInRegiScreen';
 
+
+ 
 const COLS = [
     {label: 'Name',fieldName:'Name'},
 ];
@@ -135,7 +137,10 @@ export default class EventScreen extends NavigationMixin(LightningElement) {
            }
 
 
-           getRelatedContact(){
+           @track memberValue;
+           @track disableBtnnn = true;
+
+            getRelatedContact(){
             GetRelatedContacts()
                 .then(result=>{
                     this.contactdata = result;
@@ -154,13 +159,18 @@ export default class EventScreen extends NavigationMixin(LightningElement) {
         @track selectedRows;
          @track selectedRowsId;
 
+         
         handleRowSelection(event) {
+            console.log('selected value:',event.detail.selectedRows)
             const selectedRows = event.detail.selectedRows;
             for (let i = 0; i < selectedRows.length; i++){
                 // alert("You selected: " + selectedRows[i].Id);
                 this.selectedRowsId = selectedRows[i].Id
                  
             }
+
+            //to make button disabled
+            this.disableBtnnn = !selectedRows.length>0;
         }
             submitYesDetails()
             {
@@ -169,7 +179,7 @@ export default class EventScreen extends NavigationMixin(LightningElement) {
 
                     registerForEvent({eventId: this.eventId,selectedRowsId:this.selectedRowsId})
                     .then(result => {
-                        alert(result)
+                        alert(result);
                         console.log('result', result);
                         this.isModalOpen = false;
                     })
@@ -223,11 +233,12 @@ export default class EventScreen extends NavigationMixin(LightningElement) {
 
     //To click on Society Name
     handleSocietyClick(){
-        this[NavigationMixin.Navigate]({
-            type: "standard__webPage",
-            attributes: {
-               url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/society-info-screen"
-            }
-        });
+         
+            this[NavigationMixin.Navigate]({
+                type: "standard__webPage",
+                attributes: {
+                   url: "https://thecodingstudio2-dev-ed.develop.my.site.com/sms/s/society-info-screen"
+                }
+            });
     }
 }

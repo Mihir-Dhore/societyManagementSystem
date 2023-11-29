@@ -518,6 +518,8 @@ export default class UtilityScreen extends LightningElement {
               this.utilityData = result.map(record =>({
                 ...record, //used to include all existing fields of each record in the new object
                 SocietyName: record.Society__r.Name,// To show society name instead of Id.
+              //  societyName: record.Society__r ? record.Society__r.Name : '', use this line or above
+
  
 
 ```

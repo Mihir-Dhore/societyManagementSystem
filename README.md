@@ -851,6 +851,28 @@ JS:
     }
 
 ```
-
+To Make the Field Compulsory in LWC:
+Javascript:
+```
+     handleCreateContact() {
+        let isValid = true;
+        this.template.querySelectorAll("lightning-input").forEach(item => {
+            let fieldValue = item.value;
+            let fieldLabel = item.label;
+            let fieldError = 'Please Enter the';
+    
+            if (!fieldValue) {
+                isValid = false;
+                item.setCustomValidity(fieldError + " " + fieldLabel);
+            } else {
+                item.setCustomValidity("");
+            }
+            item.reportValidity();  // Corrected method name
+        });
+    
+        if (!isValid) {
+            return;
+        }
+```
 
 

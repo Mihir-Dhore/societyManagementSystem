@@ -851,7 +851,7 @@ JS:
     }
 
 ```
-To Make the Field Compulsory in LWC:
+To Make the Field Compulsory or to add Field Error in LWC:
 Javascript:
 ```
      handleCreateContact() {

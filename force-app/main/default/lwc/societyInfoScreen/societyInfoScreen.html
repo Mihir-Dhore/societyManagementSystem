@@ -13,7 +13,7 @@
            <div class="buttons">
                  <lightning-button 
                    variant="base"
-                   label="View Society Member" 
+                   label="Member Directory" 
                    onclick={handleMemberClick} 
                  ></lightning-button><br> 
 
@@ -34,7 +34,7 @@
 
         <template if:true={showMember}>
             <div class="list-container" key={society.Id}>
-                <br> <h1>Society Member List</h1> <br>
+                <br> <h1>Member Directory</h1> <br>
             
             <table key={society.Id} class="slds-table slds-table_bordered slds-table_cell-buffer">
                 <thead>

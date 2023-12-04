@@ -9,9 +9,10 @@ import deleteRelatedContactOnUtility from '@salesforce/apex/SMSsearchEvent.delet
 
 
 const columns = [
-    { label: 'Name', fieldName: 'Name',initialWidth: 150 },
-    { label: 'Phone', fieldName: 'Phone',initialWidth: 150 },
-    { label: 'Email', fieldName: 'Email',initialWidth: 150 },
+    { label: 'Name', fieldName: 'Name' },
+    { label: 'Phone', fieldName: 'Phone' },
+    { label: 'Email', fieldName: 'Email' },
+    { label: 'Approval Status', fieldName: 'Approval_Status__c' },
     {
         type: "button", label: 'View', initialWidth: 100, typeAttributes: {
             label: 'View',
@@ -116,24 +117,48 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
      handlePhoneChange(event){
         this.phone = event.target.value;
      }
-     handleCreateContact(){
-        createContact({firstName:this.firstName, lastName:this.lastName, email:this.email,phone:this.phone})
-        .then((result)=>{
-
+     handleCreateContact() {
+        let isValid = true;
+    
+        this.template.querySelectorAll("lightning-input").forEach(item => {
+            let fieldValue = item.value;
+            let fieldLabel = item.label;
+            let fieldError = 'Please Enter the';
+    
+            if (!fieldValue) {
+                isValid = false;
+                item.setCustomValidity(fieldError + " " + fieldLabel);
+            } else {
+                item.setCustomValidity("");
+            }
+            item.reportValidity();   
+        });
+    
+        if (!isValid) {
+            return;
+        }
+    
+        createContact({
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            phone: this.phone
+        })
+        .then(result => {
             this.dispatchEvent(new ShowToastEvent({
                 title: "Family Member Added Successfully",
-                 variant: "success"
+                variant: "success"
             }));
             this.showForm = false;
-
-            console.log('Contact Created Succesfully:', result);
+    
+            console.log('Contact Created Successfully:', result);
             return refreshApex(this.wireResult);
-         })
-        .catch(error=>{
-            console.error('Error Creating Contact: ', error);
         })
-     }
-
+        .catch(error => {
+            console.error('Error Creating Contact: ', error.body.message);
+        });
+    }
+    
           //****************************For Add family member -END****************************
 
 

@@ -144,7 +144,7 @@ export default class EventScreen extends NavigationMixin(LightningElement) {
             GetRelatedContacts()
                 .then(result=>{
                     this.contactdata = result;
-                    console.log('result',result);
+                    console.log('resultssssssssss',result);
                 }).catch(error=>{
                     console.log(error);
                 })

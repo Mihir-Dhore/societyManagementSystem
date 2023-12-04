@@ -1,14 +1,14 @@
 <template>
          <!-- ****************************To Show Account Details-Start***************************** -->
          <div class="main">
-            <h1 style="font-size: medium; text-align:center">--- My Profile ---</h1>
+            <h1 style="font-size: medium; text-align:center;color:wheat">--- My Profile ---</h1>
 
 
          <div >
-            <h1>Account Details</h1>
+            <h1 style="color:wheat">Account Details</h1>
             <template if:true={accountData}>
                 <template for:each={accountData} for:item="account">
-                    <div key={account.Id}>
+                    <div class="content" style="color: white;" key={account.Id}>
                         <p><strong>ID:</strong> {account.Id}</p>
                         <p><strong>Name:</strong> {account.Name}</p>
                         <p><strong>Email:</strong> {account.Email__c}</p>

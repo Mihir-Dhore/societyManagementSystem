@@ -5,18 +5,19 @@ import changeUtilityStatus from '@salesforce/apex/SMSsearchEvent.changeUtilitySt
 import { refreshApex } from '@salesforce/apex';
 
 const columns = [
-    { label: 'Amount', fieldName: 'Amount__c',initialWidth: 250 },
-    { label: 'Account', fieldName: 'accountName',initialWidth: 250},
+    { label: 'Amount', fieldName: 'Amount__c',initialWidth: 200 },
+    { label: 'Account', fieldName: 'accountName',initialWidth: 200},
     // { label: 'Society', fieldName: 'SocietyName',initialWidth: 150},
-    { label: 'Status', fieldName: 'Status__c',initialWidth: 250},
-    { label: 'Utility Provider', fieldName: 'utilityProvider',initialWidth: 250},
+    { label: 'Status', fieldName: 'Status__c',initialWidth: 200},
+    { label: 'Approval Status', fieldName: 'Approval_Status__c',initialWidth: 200},
+    { label: 'Utility Provider', fieldName: 'utilityProvider',initialWidth: 200},
  
  
     {
         type: "button", label: 'Mark As Paid', initialWidth: 150, typeAttributes: {
             // label: 'Mark As Paid',
             // label: { fieldName: 'buttonLabel' }, //Added dynamic label
-            label: 'Mark As Read',
+            label: 'Mark As Paid',
             name: 'MarkAsPaid',
             title: 'MAP',
             disabled: {fieldName:'MarkAsPaid'},
@@ -60,7 +61,7 @@ export default class UtilityScreen extends LightningElement {
             ...record,
             accountName: record.Account__r ? record.Account__r.Name : '',
             utilityProvider: record.Utility_Provider__r ? record.Utility_Provider__r.Name : '',
-            MarkAsPaid: record.Status__c ==='Paid',
+            MarkAsPaid: record.Status__c ==='Paid' ||record.Status__c ==='Unpaid',
 
         })); 
         // console.log('utilityData',utilityData);

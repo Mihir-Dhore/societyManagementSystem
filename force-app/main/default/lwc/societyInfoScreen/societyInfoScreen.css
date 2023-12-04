@@ -10,6 +10,8 @@
     margin: 20px;
 
     background-color: #f0f0f0;
+    /* background-color: rgb(3, 69, 83); */
+
     border: 1px solid #dcdcdc;
     border-radius: 10px;
     padding: 20px;
@@ -26,6 +28,7 @@
 .society-details {
     width: 60%;
     font-size: 16x;
+    /* color: white; */
 }
 
 .buttons {

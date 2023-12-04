@@ -5,10 +5,10 @@ import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const columns = [
-    { label: 'Description', fieldName: 'Description__c',initialWidth: 500},
-    { label: 'Society', fieldName: 'societyName'},
-    { label: 'Requested Date', fieldName: 'Request_Date__c' },
-    { label: 'Status', fieldName: 'Status__c' },
+    { label: 'Description', fieldName: 'Description__c',initialWidth: 350},
+    { label: 'Society', fieldName: 'societyName',initialWidth: 300},
+    { label: 'Requested Date', fieldName: 'Request_Date__c',initialWidth: 300 },
+    { label: 'Status', fieldName: 'Status__c',initialWidth: 300 },
     // { label: 'Requested By', fieldName: 'requestedBy' },
  ];
 
@@ -52,25 +52,46 @@ export default class MaintenanceRequest extends LightningElement {
         this.description = event.target.value;
      }
  
-     handleSave(){
-        insertMaintainanceReq({description:this.description})
-        .then(result=>{
-            console.log('Added Successfully',result);
-            
-            this.dispatchEvent(new ShowToastEvent({
-                title: "Maintainance Request Added Successfully!",
-                 variant: "success"
-            }));
-            this.showMaintainenceForm = false;
-            this.showMaintainaceDetails();
-            // return refreshApex(this.maintainenceData);
+     handleSave() {
+        let isValid = true;
     
-        }).catch(error=>{
-            console.log('Error',error);
-        })
-
+         this.template.querySelectorAll("lightning-textarea").forEach(item => {
+            let fieldValue = item.value;
+            let fieldLabel = item.label;
+            let fieldErrorMsg = 'Please Enter the';
+    
+            if (!fieldValue) {
+                isValid = false;
+                item.setCustomValidity(fieldErrorMsg + " " + fieldLabel);
+            } else {
+                item.setCustomValidity("");
+            }
+            item.reportValidity();
+        });
+    
+        // If any field is empty, do not proceed with saving
+        if (!isValid) {
+            return;
         }
-    handleCancel(){
+    
+        // All fields are filled, proceed with saving
+        insertMaintainanceReq({ description: this.description })
+            .then(result => {
+                console.log('Added Successfully', result);
+    
+                this.dispatchEvent(new ShowToastEvent({
+                    title: "Maintenance Request Added Successfully!",
+                    variant: "success"
+                }));
+                this.showMaintainenceForm = false;
+                this.showMaintainaceDetails();
+                // return refreshApex(this.maintainenceData);
+    
+            }).catch(error => {
+                console.log('Error', error);
+            });
+    }
+        handleCancel(){
         this.showMaintainenceForm = false;
 
     }

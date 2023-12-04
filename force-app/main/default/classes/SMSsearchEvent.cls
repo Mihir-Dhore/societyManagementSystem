@@ -46,7 +46,7 @@ public without sharing class SMSsearchEvent {
     String currentUserName = UserInfo.getUserName();
     
     // Query for the contact based on selectedRowsId
-    List<Contact> conList = [SELECT Id, FirstName, LastName, Email FROM Contact WHERE Id = :selectedRowsId LIMIT 1];
+    List<Contact> conList = [SELECT Id, FirstName, LastName, Email FROM Contact WHERE Id = :selectedRowsId];
     
     if (!conList.isEmpty()) {
         // Check if the contact is already registered for the event
@@ -98,8 +98,6 @@ public without sharing class SMSsearchEvent {
             
         }
              return addContact;
-      
-        
     }  
     */
     //For MyProfile --> List of related Contact
@@ -109,11 +107,41 @@ public without sharing class SMSsearchEvent {
         List<Account> getAccounts = [Select Id, Name, Email__c From Account Where Email__c=:currentUserName];
         List<Contact> getRelatedContacts = new List<Contact>();
         for(Account acc: getAccounts){
-            List<Contact> addRelatedCon = [Select Id, Name, Phone, Email From Contact Where AccountId =: acc.Id];
+            List<Contact> addRelatedCon = [Select Id, Name, Phone, Email,Approval_Status__c From Contact Where AccountId =: acc.Id];
             getRelatedContacts.addAll(addRelatedCon);
          }
         return getRelatedContacts;
     }
+    
+ ///Check for Unregistered Contact For Event
+@AuraEnabled(cacheable=true)
+public static List<Contact> getUnregisteredContactForEvent(String eventId) { 
+    String currentUserName = UserInfo.getUserName();
+    List<Account> getAccounts = [SELECT Id, Name, Email__c FROM Account WHERE Email__c = :currentUserName LIMIT 1];
+    
+    List<Contact> getUnregisteredContacts = new List<Contact>();
+    
+    if (!getAccounts.isEmpty()) {
+        List<Contact> allContacts = [SELECT Id, Name, Phone, Email, Approval_Status__c FROM Contact WHERE AccountId IN :getAccounts];
+
+        List<Event_Registration__c> eventRegList = [SELECT Contact__c FROM Event_Registration__c WHERE Contact__c != null AND Event__c = :eventId];
+        Set<Id> registeredContactIds = new Set<Id>();
+        
+        // Collect the IDs of contacts registered for the event
+        for (Event_Registration__c eventReg : eventRegList) {
+            registeredContactIds.add(eventReg.Contact__c);
+        }
+
+        for (Contact con : allContacts) {
+            if (!registeredContactIds.contains(con.Id)) {
+                getUnregisteredContacts.add(con);
+            }
+        }
+    }
+    
+    System.debug('getUnregisteredContacts: ' + getUnregisteredContacts);
+    return getUnregisteredContacts;
+}
     
     //To Add Family Member
     @AuraEnabled
@@ -130,11 +158,13 @@ public without sharing class SMSsearchEvent {
                 newContact.LastName = lastName;
                 newContact.Email = email;
                 newContact.Phone = phone;
-           
                insert newContact;
+                       system.debug('newContact'+newContact);
+
                return 'Contact Added Succesfully';
 
         }
+      system.debug('errror');
         return 'Error';
     }
     
@@ -152,7 +182,7 @@ public without sharing class SMSsearchEvent {
         String currentUserName = UserInfo.getUserName();
         
         List<Account> accList = [Select Id, Name, Email__c From Account Where Email__c =:currentUserName];
-        List<Utility_Payment__c> utiList = [Select Id,Name, Account__c,Account__r.Name,Amount__c,Status__c,Utility_Provider__c,Utility_Provider__r.Name From Utility_Payment__c Where Account__c =: accList[0].Id ];
+        List<Utility_Payment__c> utiList = [Select Id,Name, Account__c,Account__r.Name,Amount__c,Status__c,Approval_Status__c,Utility_Provider__c,Utility_Provider__r.Name From Utility_Payment__c Where Account__c =: accList[0].Id ];
         return utiList;
     }
 
@@ -170,8 +200,8 @@ public static String changeUtilityStatus(String rowId) {
      Boolean unpaidFound = false;
 
      for (Utility_Payment__c utility : utiList) {
-         if (utility.Status__c == 'Unpaid' && utility.Status__c != null || utility.Amount__c != Null) {
-             utility.Status__c = 'Paid';
+         if (utility.Status__c == 'New' && utility.Status__c != null || utility.Amount__c != Null) {
+             utility.Status__c = 'Pending';
           //   utility.Amount__c = 0;
             unpaidFound = true;
         }

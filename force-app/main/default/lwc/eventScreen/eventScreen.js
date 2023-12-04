@@ -9,11 +9,11 @@ import CheckCurrentUserSociety from '@salesforce/apex/SMSsearchEvent.isCurrentUs
 import SearchEventsForAlreadyRagstered from '@salesforce/apex/SMSsearchEvent.SearchEventsForAlreadyRagstered';
 import UpdateSocietyOnAccount from '@salesforce/apex/SMSsearchEvent.UpdateAccountSociety';
 // import checkUserRegistrationForEvent from '@salesforce/apex/SMSsearchEvent.checkUserRegistrationForEvent';
-import GetRelatedContacts from '@salesforce/apex/SMSsearchEvent.GetRelatedContacts';
+// import GetRelatedContacts from '@salesforce/apex/SMSsearchEvent.GetRelatedContacts';
 // import getFamilyMemberInRegiScreen from '@salesforce/apex/SMSsearchEvent.getFamilyMemberInRegiScreen';
+import getUnregisteredContactForEvent from '@salesforce/apex/SMSsearchEvent.getUnregisteredContactForEvent';
+import { refreshApex } from '@salesforce/apex';
 
-
- 
 const COLS = [
     {label: 'Name',fieldName:'Name'},
 ];
@@ -110,46 +110,33 @@ export default class EventScreen extends NavigationMixin(LightningElement) {
 
           cols = COLS;
           @track contactdata;
+
+
           handleRegister(event){
-            this.getRelatedContact();
             this.eventId = event.currentTarget.dataset.eventId;
-            // getFamilyMemberInRegiScreen({eventId:this.eventId})
-            // .then((result)=>{
-            //     console.log('re',result);
-
-            //     this.contactdata = result;
-            //     console.log('fdds',this.contactdata);
-
-               this.isModalOpen = true;
-
-                // if(!this.contactdata){
-                //     this.dispatchEvent(new ShowToastEvent({
-                //         title: "Already Registered",
-                //         variant: "warning"
-                //     }));
-                // }else{
-                //     this.isModalOpen = true;
-                //     const arr = JSON.stringify(result);
-                //     console.log(arr,'result');
-
-                // }
-            // })
-           }
-
-
-           @track memberValue;
+            console.log('eventID',this.eventId);
+            this.getRelatedContact();
+ 
+                this.isModalOpen = true;
+            }
+        
            @track disableBtnnn = true;
 
+ 
             getRelatedContact(){
-            GetRelatedContacts()
+                getUnregisteredContactForEvent({eventId:this.eventId})
                 .then(result=>{
                     this.contactdata = result;
+
                     console.log('resultssssssssss',result);
+                    // return refreshApex(this.contactdata);
                 }).catch(error=>{
                     console.log(error);
                 })
             
            }
+
+
            
           closeModal(){
             this.isModalOpen = false;
@@ -172,16 +159,22 @@ export default class EventScreen extends NavigationMixin(LightningElement) {
             //to make button disabled
             this.disableBtnnn = !selectedRows.length>0;
         }
-            submitYesDetails()
+
+     
+             submitYesDetails()
             {
                     console.log('eventId',this.eventId);
                     console.log('selectedRowsId',this.selectedRowsId);
+
 
                     registerForEvent({eventId: this.eventId,selectedRowsId:this.selectedRowsId})
                     .then(result => {
                         alert(result);
                         console.log('result', result);
                         this.isModalOpen = false;
+                        this.$forceUpdate();
+
+
                     })
                     .catch(error => {
                         this.error = error;

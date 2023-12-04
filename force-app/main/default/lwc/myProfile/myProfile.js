@@ -6,8 +6,15 @@ import { refreshApex } from '@salesforce/apex';
 import createContact from '@salesforce/apex/SMSsearchEvent.createContact';
 import showAccount from '@salesforce/apex/SMSsearchEvent.showAccountDetails';
 import deleteRelatedContactOnUtility from '@salesforce/apex/SMSsearchEvent.deleteRelatedContactOnUtility';
+import showVisitors from '@salesforce/apex/SMSsearchEvent.showVisitors';
 
-
+//for visitors
+const cols = [
+    { label: 'Name', fieldName: 'Name',initialWidth: 120 },
+    { label: 'Address', fieldName: 'Address__c',initialWidth: 180 },
+    { label: 'Date and Time', fieldName: 'Date_and_Time__c',initialWidth: 120},
+    { label: 'Flat', fieldName: 'flatName',initialWidth: 120 }
+];
 const columns = [
     { label: 'Name', fieldName: 'Name',initialWidth: 120 },
     { label: 'Phone', fieldName: 'Phone',initialWidth: 120 },
@@ -209,4 +216,26 @@ export default class MyProfile extends NavigationMixin (LightningElement) {
     
    //****************************For EDIT,VIEW and DELETE Buttons -End****************************
 
+
+   //Visitors
+   cols=cols;
+   @track visitorsData;
+   @track showVisitorsModal = false;
+
+   handleVisitorsClick(){
+    this.showVisitorsModal = true;
+    showVisitors()
+    .then(result=>{
+       this.visitorsData =result.map(record=>({
+        ...record,
+        flatName: record.Account__r.Name
+       })); 
+    }).catch(error=>{
+        console.log(error);
+    })
+   }
+
+   onCancelVisitors(){
+    this.showVisitorsModal = false;
+   }
 }

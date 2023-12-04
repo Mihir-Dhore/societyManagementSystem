@@ -8,23 +8,63 @@
             <h1 style="color:wheat">Account Details</h1>
             <template if:true={accountData}>
                 <template for:each={accountData} for:item="account">
-                    <div class="content" style="color: white;" key={account.Id}>
-                        <p><strong>ID:</strong> {account.Id}</p>
-                        <p><strong>Name:</strong> {account.Name}</p>
-                        <p><strong>Email:</strong> {account.Email__c}</p>
-                    </div>
+
+                         <div class="content" style="color: white;" key={account.Id}>
+                            <p><strong>ID:</strong> {account.Id}</p>
+                            <p><strong>Name:</strong> {account.Name}</p>
+                            <p><strong>Phone:</strong> {account.Phone}</p>
+                            <p><strong>Email:</strong> {account.Email__c}</p>
+                        </div>
+ 
+                    <template if:true={showVisitorsModal}>
+                        <section key={account.Id} role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+                            <div class="slds-modal__container">
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+                            <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Cancel and close</span>
+                            </button>
+                            <div class="slds-modal__header">
+                            <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Modal header</h1>
+                            </div>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <lightning-datatable
+                                key-field="id"
+                                data={visitorsData}
+                                columns={cols}
+                                onrowselection={handleRowSelection}
+                              ></lightning-datatable>
+                            </div>
+                            <div class="slds-modal__footer">
+                            <button onclick={onCancelVisitors} class="slds-button slds-button_neutral" aria-label="Cancel and close">Cancel</button>
+                            <!-- <button class="slds-button slds-button_brand">Save</button> -->
+                            </div>
+                            </div>
+                            </section>
+                            <div key={account.Id} class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+
+                    </template>
+
                 </template>
             </template>
            </div>
         <!-- ****************************To Show Account Details-End***************************** -->
 
         <template if:true={data}>      
-                <div style="display: flex; justify-content:right; margin:20px">
-                    <lightning-button
-                    variant="success"
-                    label="Add Family Member" 
-                    onclick={handleAddFamilyMemberClick} 
-                  ></lightning-button>
+                <div style="display: flex; justify-content:space-between; margin:20px">
+                    <div key={account.Id}>
+                        <button onclick={handleVisitorsClick} class="slds-button slds-button_text-destructive">Visitors History</button>
+                    </div>
+
+                    <div>
+                        <lightning-button
+                        variant="success"
+                        label="Add Family Member" 
+                        onclick={handleAddFamilyMemberClick} 
+                      ></lightning-button>
+                    </div>
+
                 </div>
 
             <template if:true={showForm}>
@@ -37,9 +77,9 @@
                     <span class="slds-assistive-text">Cancel and close</span>
                     </button>
                     <div class="slds-modal__header">
-                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Add Family Member</h1>
+                    <h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate">Add Family Member</h1>
                     </div>
-                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
  
                     <lightning-input label="First Name" value={firstName} onchange={handleFirstNameChange} required></lightning-input>
                 <lightning-input label="Last Name" value={lastName} onchange={handleLastNameChange} required></lightning-input>

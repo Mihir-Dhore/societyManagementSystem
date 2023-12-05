@@ -874,5 +874,8 @@ Javascript:
             return;
         }
 ```
-
-
+Query that joins the Contact and Account objects SOQL Query: it shows the both Account and Contact Data.
+```
+SELECT Id, Name, (SELECT Name, Phone FROM Contacts WHERE AccountId != null AND Phone != null)
+FROM Account WHERE Type = 'Prospect' AND (Phone LIKE '3%' OR Phone LIKE '4%' OR Phone LIKE '7%') AND OwnerId = '0055j000008O8CGAA0'
+```

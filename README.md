@@ -879,3 +879,47 @@ Query that joins the Contact and Account objects SOQL Query: it shows the both A
 SELECT Id, Name, (SELECT Name, Phone FROM Contacts WHERE AccountId != null AND Phone != null)
 FROM Account WHERE Type = 'Prospect' AND (Phone LIKE '3%' OR Phone LIKE '4%' OR Phone LIKE '7%') AND OwnerId = '0055j000008O8CGAA0'
 ```
+Fetch Weather Data From API
+Javascript:
+```
+//To fetch the api need to add the 'Trusted URL' in to the org from set and also need to add into 'CORS(Optional)'
+    @track result;
+
+    @track searchValue;
+    handleSearchChange(event){
+        this.searchValue = event.target.value;
+     }
+
+    handleFetch() {
+      console.log('enter into data');
+      let endPoint = `https://api.weatherapi.com/v1/current.json?key=6388b321ff7a4f239de125943230612&q=${this.searchValue}`;
+      console.log('endpoint',endPoint)
+      fetch(endPoint, {
+        method: "GET"
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('data',data)
+        this.result = data;
+        console.log('repos',this.result);
+       })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+    }
+
+```
+HTML:
+```
+<!-- API -->
+<template if:true={result}>
+  <h1>Data is here</h1>
+  <div style="display: flex; flex-wrap: wrap;">
+       <p>City Name: {result.location.name} <br></p>
+       <p>Temp in celcius: {result.current.temp_c}</p><br>
+       <p>Temp in farade: {result.current.temp_f}</p>
+
+   </div>
+</template>
+
+```

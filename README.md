@@ -1035,4 +1035,40 @@ trigger PracticeTrigger2 on Account (after Insert, after Update) {
 }
 
 ```
+Trigger: Create an asset when create an OpportunityLineItem with associated Account.
+
+```
+trigger PracticeTrigger3 on OpportunityLineItem (after insert) {
+    List<Asset> assetList = new List<Asset>();
+
+    // Collect the Account IDs associated with the OpportunityLineItems
+    Set<Id> accountIds = new Set<Id>();
+    for (OpportunityLineItem oli : Trigger.New) {
+        accountIds.add(oli.Opportunity.AccountId);
+    }
+
+    // Query the related Accounts
+    Map<Id, Account> accountsMap = new Map<Id, Account>([SELECT Id, Name FROM Account WHERE Id IN :accountIds]);
+
+    // Create Asset records based on OpportunityLineItems
+    for (OpportunityLineItem oli : Trigger.New) {
+        // Check if the Opportunity has an associated Account
+        if (accountsMap.containsKey(oli.Opportunity.AccountId)) {
+            Account acc = accountsMap.get(oli.Opportunity.AccountId);
+
+            // Create an Asset and associate it with the Account
+            Asset ass = new Asset();
+            ass.Name = oli.Name;
+            ass.AccountId = acc.Id; // Associate the Asset with the Account
+            assetList.add(ass);
+        }
+    }
+
+    // Insert the Asset records
+    if (!assetList.isEmpty()) {
+        insert assetList;
+    }
+}
+
+```
 

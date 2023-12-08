@@ -1116,4 +1116,64 @@ trigger PracticeTrigger2 on Account (before Insert , before update) {
   }
 
 ```
+Function to combines geolocation and API fetching to get the user's current location and retrieve weather data based on that location.
+HTML:
+```
+<lightning-button 
+  variant="Success"
+  label="Fetch Current Location" 
+  onclick={handleCurrentLocation} 
+></lightning-button>
+```
+Javascript:
+```
+handleCurrentLocation() {
+    // Check if geolocation is supported by the browser
+    if (navigator.geolocation) {
+        // If supported, call getCurrentPosition to get the user's current location
+        navigator.geolocation.getCurrentPosition(
+            // Success callback function - executed when the location is successfully obtained
+            (position) => {
+                // Extract latitude and longitude from the position object
+                const currentLocation = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
+                // Log the current location to the console
+                console.log('Current Location:', currentLocation);
+
+                // Construct the API endpoint using the obtained latitude and longitude
+                let endPoint = `https://api.weatherapi.com/v1/current.json?key=6388b321ff7a4f239de125943230612&q=${currentLocation.latitude},${currentLocation.longitude}`;
+                // Log the constructed API endpoint to the console
+                console.log('Weather API endpoint:', endPoint);
+
+                // Fetch weather data based on the current location
+                fetch(endPoint, {
+                    method: 'GET'
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    // Log the fetched weather data to the console
+                    console.log('Weather data:', data);
+                    // Set the result property in the component to store the fetched data
+                    this.result = data;
+                })
+                .catch((error) => {
+                    // Log an error if there's an issue fetching the weather data
+                    console.error('Error fetching weather data:', error);
+                });
+            },
+            // Error callback function - executed if there's an issue getting the location
+            (error) => {
+                console.error('Error getting location:', error);
+            }
+        );
+    } else {
+        // Log an error if geolocation is not supported by the browser
+        console.error('Geolocation is not supported by this browser.');
+    }
+}
+
+```
+
 

@@ -1101,4 +1101,19 @@ trigger PracticeTrigger3 on OpportunityLineItem (after insert) {
 }
 
 ```
+Triggger: Write an apex trigger to prevent the duplicate Account records inside the object
+```
+trigger PracticeTrigger2 on Account (before Insert , before update) {
+    for(Account acc: trigger.new)
+    {
+        integer AccCount = [select count() from Account where Name=:acc.Name];  //if record will greater than 0 will throws an error.
+        if(AccCount>0)
+        {
+            acc.Name.addError('Duplicate record Found, you cannot create a record wih same candidate name');
+        }
+    }
+    
+  }
+
+```
 

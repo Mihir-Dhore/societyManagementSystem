@@ -992,7 +992,7 @@ https://thecodingstudio2-dev-ed.develop.my.salesforce.com and after that need to
 Cases at last in below url is urlMappimg from above apex class....
 https://thecodingstudio2-dev-ed.develop.my.salesforce.com/services/apexrest/Cases
 
-and after that need to Add sessionId from to Authorization as a bearer Token and this sessionId and Base url is get from the Organizer Extension and If want to do it all this Automatically so need to use connected app and name credential and refer it from below youtube Video after 58Mins
+and after that need to Add sessionId to Authorization as a bearer Token in postman and this sessionId and Base url is get from the Organizer Extension and If want to do it all this Automatically so need to use connected app and name credential and refer it from below youtube Video after 58Mins
 https://youtu.be/2myol9hI28c?si=vwdcERe2MenZIZ3C
 ```
 

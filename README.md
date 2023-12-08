@@ -1008,4 +1008,31 @@ trigger PracticeTrigger on CallNot__c (before Update) {
         }
     }
 ```
+Trigger: when Accounts Billing city is change then also update its related Contacts Mailing City
+
+```
+trigger PracticeTrigger2 on Account (after Insert, after Update) {
+    if (Trigger.isAfter && (Trigger.isInsert || Trigger.isUpdate)) {
+        List<Contact> conList = new List<Contact>();
+
+        for (Account acc : Trigger.New) {
+             Account oldAccount = Trigger.oldMap.get(acc.Id);
+
+             if (oldAccount.BillingCity != acc.BillingCity) {
+                 List<Contact> contactsToUpdate = [SELECT Id, MailingCity FROM Contact WHERE AccountId = :acc.Id];
+
+                 for (Contact con : contactsToUpdate) {
+                    con.MailingCity = acc.BillingCity;
+                    conList.add(con);
+                }
+            }
+        }
+
+         if (!conList.isEmpty()) {
+            update conList;
+        }
+    }
+}
+
+```
 

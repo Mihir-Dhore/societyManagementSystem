@@ -995,3 +995,17 @@ https://thecodingstudio2-dev-ed.develop.my.salesforce.com/services/apexrest/Case
 and after that need to Add sessionId from to Authorization as a bearer Token and this sessionId and Base url is get from the Organizer Extension and If want to do it all this Automatically so need to use connected app and name credential and refer it from below youtube Video after 58Mins
 https://youtu.be/2myol9hI28c?si=vwdcERe2MenZIZ3C
 ```
+
+Trigger: Amount Of the Opportunity Should not be Change, it can stay as it is, if it is changing then it must throws an error.
+```
+trigger PracticeTrigger on CallNot__c (before Update) {
+    if(Trigger.isBefore && Trigger.isUpdate){
+        for(CallNot__c cn: Trigger.New){
+            CallNot__c oldValue = Trigger.oldMap.get(cn.Id); //to get the old value
+            if(oldValue.Status__c != cn.Status__c){
+                cn.Status__c.addError('Field Changing is not allow');
+            }
+        }
+    }
+```
+

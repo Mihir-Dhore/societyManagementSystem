@@ -33,5 +33,4 @@ export default class FeedbackScreen extends LightningElement {
             console.log('error',error)
         })
     }
-    
 }

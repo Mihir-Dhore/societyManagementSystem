@@ -172,7 +172,7 @@ public static List<Contact> getUnregisteredContactForEvent(String eventId) {
    @AuraEnabled(Cacheable=true)
     public static List<Account> showAccountDetails() {
     String currentUserName = UserInfo.getUserName();
-    List<Account> accList = [SELECT Id, Name, Email__c FROM Account WHERE Email__c = :currentUserName];
+    List<Account> accList = [SELECT Id, Name, Email__c,Phone FROM Account WHERE Email__c = :currentUserName];
     return accList;
 }
 
@@ -317,5 +317,13 @@ public static String changeUtilityStatus(String rowId) {
         return ameList;
         
     }
-    
-}
+    //Show Visitors
+    @AuraEnabled
+    public static List<Visitor__c> showVisitors(){
+        String currentUserName = UserInfo.getUserName();
+        List<Account> accList = [Select Id,Name from Account Where Email__c=:currentUserName];
+        List<Visitor__c> visitorsList = [Select Id,Name,Account__c,Account__r.Name,Address__c,Date_and_Time__c From Visitor__c Where Account__c=:accList[0].Id];
+        return visitorsList;
+    }
+     
+ }

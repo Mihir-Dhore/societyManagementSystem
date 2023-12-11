@@ -1,10 +1,10 @@
-import { LightningElement, track,api } from 'lwc';
+import { LightningElement, track,api,wire } from 'lwc';
 import showSocietyInfo from '@salesforce/apex/SMSsearchEvent.showSocietyInfo';
 import accountListRelatedToSociety from '@salesforce/apex/SMSsearchEvent.accountListRelatedToSociety';
 import showSocietyStaff from '@salesforce/apex/SMSsearchEvent.showSocietyStaff';
 
 import showAmenities from '@salesforce/apex/SMSsearchEvent.showAmenities';
-
+ 
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class SocietyInfoScreen extends NavigationMixin(LightningElement) {
@@ -81,4 +81,6 @@ export default class SocietyInfoScreen extends NavigationMixin(LightningElement)
             }
         });
     }
-}
+
+ }
+    

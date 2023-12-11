@@ -1,0 +1,41 @@
+<template>
+    <!-- API -->
+<template if:true={result}>
+  <h1>Weather Data:</h1>
+  <div style="display: flex; flex-wrap: wrap;">
+        <p>City Name: {result.location.name} <br></p>
+       <p>Temp in celcius: {result.current.temp_c}</p><br>
+       <p>Temp in farade: {result.current.temp_f}</p>
+
+   </div>
+</template>
+<div>
+  <lightning-input
+    type="search"
+    onchange={handleSearchChange}
+    value={searchValue}
+    name="enter city name"
+    label="Search when user hits the 'enter' key"
+  ></lightning-input>
+</div>
+<lightning-button label="Fetch Weather Data" onclick={handleFetch}></lightning-button>
+
+
+<!-- For agri API -->
+<lightning-button 
+  variant="Success"
+  label="Agri Data" 
+  onclick={handleAgriClick} 
+></lightning-button>
+
+ 
+<lightning-button 
+  variant="Success"
+  label="Fetch Current Location" 
+  onclick={handleCurrentLocation} 
+></lightning-button>
+
+      
+      
+</template>
+

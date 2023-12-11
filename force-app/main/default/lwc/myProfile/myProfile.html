@@ -16,6 +16,7 @@
                             <p><strong>Email:</strong> {account.Email__c}</p>
                         </div>
  
+                        <!-- Visitors - Start -->
                     <template if:true={showVisitorsModal}>
                         <section key={account.Id} role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
                             <div class="slds-modal__container">
@@ -33,6 +34,8 @@
                                 key-field="id"
                                 data={visitorsData}
                                 columns={cols}
+                                hide-checkbox-column="true"
+                                show-row-number-column="true"
                                 onrowselection={handleRowSelection}
                               ></lightning-datatable>
                             </div>
@@ -43,8 +46,9 @@
                             </div>
                             </section>
                             <div key={account.Id} class="slds-backdrop slds-backdrop_open" role="presentation"></div>
-
                     </template>
+                                            <!-- Visitors - End -->
+
 
                 </template>
             </template>

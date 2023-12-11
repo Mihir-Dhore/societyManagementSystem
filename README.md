@@ -874,5 +874,306 @@ Javascript:
             return;
         }
 ```
+Query that joins the Contact and Account objects SOQL Query: it shows the both Account and Contact Data.
+```
+SELECT Id, Name, (SELECT Name, Phone FROM Contacts WHERE AccountId != null AND Phone != null)
+FROM Account WHERE Type = 'Prospect' AND (Phone LIKE '3%' OR Phone LIKE '4%' OR Phone LIKE '7%') AND OwnerId = '0055j000008O8CGAA0'
+```
+Fetch Weather Data From API
+Javascript:
+```
+//To fetch the api need to add the 'Trusted URL' in to the org from set and also need to add into 'CORS(Optional)'
+    @track result;
+
+    @track searchValue;
+    handleSearchChange(event){
+        this.searchValue = event.target.value;
+     }
+
+    handleFetch() {
+      console.log('enter into data');
+      let endPoint = `https://api.weatherapi.com/v1/current.json?key=6388b321ff7a4f239de125943230612&q=${this.searchValue}`;
+      console.log('endpoint',endPoint)
+      fetch(endPoint, {
+        method: "GET"
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('data',data)
+        this.result = data;
+        console.log('repos',this.result);
+       })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+    }
+
+```
+HTML:
+```
+<!-- API -->
+<template if:true={result}>
+  <h1>Data is here</h1>
+  <div style="display: flex; flex-wrap: wrap;">
+       <p>City Name: {result.location.name} <br></p>
+       <p>Temp in celcius: {result.current.temp_c}</p><br>
+       <p>Temp in farade: {result.current.temp_f}</p>
+
+   </div>
+</template>
+
+```
+Salesforce Integration: Integrate with one or more another org
+APEX:
+```
+@RestResource(urlMapping='/Cases/*')
+global with sharing class APICall {
+    @HttpGet
+    global static List<Case> getCaseById() {
+         List<Case> result =  [SELECT CaseNumber,Subject,Status,Origin,Priority
+                        FROM Case Limit 10];
+        return result;
+    }
+    @HttpPost
+    global static ID createCase(String subject, String status,
+        String origin, String priority) {
+        Case thisCase = new Case(
+            Subject=subject,
+            Status=status,
+            Origin=origin,
+            Priority=priority);
+        insert thisCase;
+        return thisCase.Id;
+    }   
+    @HttpDelete
+    global static void deleteCase() {
+        RestRequest request = RestContext.request;
+        String caseId = request.requestURI.substring(
+            request.requestURI.lastIndexOf('/')+1);
+        Case thisCase = [SELECT Id FROM Case WHERE Id = :caseId];
+        delete thisCase;
+    }     
+    @HttpPut
+    global static ID upsertCase(String subject, String status,
+        String origin, String priority, String id) {
+        Case thisCase = new Case(
+                Id=id,
+                Subject=subject,
+                Status=status,
+                Origin=origin,
+                Priority=priority);
+        // Match case by Id, if present.
+        // Otherwise, create new case.
+        upsert thisCase;
+        // Return the case ID.
+        return thisCase.Id;
+    }
+    @HttpPatch
+    global static ID updateCaseFields() {
+        RestRequest request = RestContext.request;
+        String caseId = request.requestURI.substring(
+            request.requestURI.lastIndexOf('/')+1);
+        Case thisCase = [SELECT Id FROM Case WHERE Id = :caseId];
+        // Deserialize the JSON string into name-value pairs
+        Map<String, Object> params = (Map<String, Object>)JSON.deserializeUntyped(request.requestbody.tostring());
+        // Iterate through each parameter field and value
+        for(String fieldName : params.keySet()) {
+            // Set the field and value on the Case sObject
+            thisCase.put(fieldName, params.get(fieldName));
+        }
+        update thisCase;
+        return thisCase.Id;
+    }    
+}
+```
+URL to test it in postman
+```
+https://thecodingstudio2-dev-ed.develop.my.salesforce.com and after that need to add some code as follows:
+Cases at last in below url is urlMappimg from above apex class....
+https://thecodingstudio2-dev-ed.develop.my.salesforce.com/services/apexrest/Cases
+
+and after that need to Add sessionId to Authorization as a bearer Token in postman and this sessionId and Base url is get from the Organizer Extension and If want to do it all this Automatically so need to use connected app and name credential and refer it from below youtube Video after 58Mins
+https://youtu.be/2myol9hI28c?si=vwdcERe2MenZIZ3C
+```
+
+Trigger: Amount Of the Opportunity Should not be Change, it can stay as it is, if it is changing then it must throws an error.
+```
+trigger PracticeTrigger on CallNot__c (before Update) {
+    if(Trigger.isBefore && Trigger.isUpdate){
+        for(CallNot__c cn: Trigger.New){
+            CallNot__c oldValue = Trigger.oldMap.get(cn.Id); //to get the old value
+            if(oldValue.Status__c != cn.Status__c){
+                cn.Status__c.addError('Field Changing is not allow');
+            }
+        }
+    }
+```
+Trigger: when Accounts Billing city is change then also update its related Contacts Mailing City
+
+```
+trigger PracticeTrigger2 on Account (after Insert, after Update) {
+    if (Trigger.isAfter && (Trigger.isInsert || Trigger.isUpdate)) {
+        List<Contact> conList = new List<Contact>();
+
+        for (Account acc : Trigger.New) {
+             Account oldAccount = Trigger.oldMap.get(acc.Id);
+
+             if (oldAccount.BillingCity != acc.BillingCity) {
+                 List<Contact> contactsToUpdate = [SELECT Id, MailingCity FROM Contact WHERE AccountId = :acc.Id];
+
+                 for (Contact con : contactsToUpdate) {
+                    con.MailingCity = acc.BillingCity;
+                    conList.add(con);
+                }
+            }
+        }
+
+         if (!conList.isEmpty()) {
+            update conList;
+        }
+    }
+}
+
+```
+Trigger: Create an asset when create an OpportunityLineItem with associated Account.
+
+```
+//With using Map and set
+trigger PracticeTrigger3 on OpportunityLineItem (after insert) {
+    List<Asset> assetList = new List<Asset>();
+
+    // Collect the Account IDs associated with the OpportunityLineItems
+    Set<Id> accountIds = new Set<Id>();
+    for (OpportunityLineItem oli : Trigger.New) {
+        accountIds.add(oli.Opportunity.AccountId);
+    }
+
+    // Query the related Accounts
+    Map<Id, Account> accountsMap = new Map<Id, Account>([SELECT Id, Name FROM Account WHERE Id IN :accountIds]);
+
+    // Create Asset records based on OpportunityLineItems
+    for (OpportunityLineItem oli : Trigger.New) {
+        // Check if the Opportunity has an associated Account
+        if (accountsMap.containsKey(oli.Opportunity.AccountId)) {
+            Account acc = accountsMap.get(oli.Opportunity.AccountId);
+
+            // Create an Asset and associate it with the Account
+            Asset ass = new Asset();
+            ass.Name = oli.Name;
+            ass.AccountId = acc.Id; // Associate the Asset with the Account
+            assetList.add(ass);
+        }
+    }
+
+    // Insert the Asset records
+    if (!assetList.isEmpty()) {
+        insert assetList;
+    }
+}
+
+
+//OR
+
+//With Using List
+trigger PracticeTrigger3 on OpportunityLineItem (after insert) {
+    List<Asset> assetList = new List<Asset>();
+
+    for (OpportunityLineItem oli : Trigger.New) {
+        // Query the related Account information
+        List<Account> accList = [SELECT Id, Name FROM Account WHERE Id = :oli.Opportunity.AccountId LIMIT 1];
+
+        // Check if there is a related Account
+        if (!accList.isEmpty()) {
+            Account acc = accList[0];
+
+            // Create an Asset and associate it with the Account
+            Asset ass = new Asset();
+            ass.Name = oli.Name;
+            ass.AccountId = acc.Id; // Associate the Asset with the Account
+            assetList.add(ass);
+        }
+    }
+
+    // Insert the Asset records
+    if (!assetList.isEmpty()) {
+        insert assetList;
+    }
+}
+
+```
+Triggger: Write an apex trigger to prevent the duplicate Account records inside the object
+```
+trigger PracticeTrigger2 on Account (before Insert , before update) {
+    for(Account acc: trigger.new)
+    {
+        integer AccCount = [select count() from Account where Name=:acc.Name];  //if record will greater than 0 will throws an error.
+        if(AccCount>0)
+        {
+            acc.Name.addError('Duplicate record Found, you cannot create a record wih same candidate name');
+        }
+    }
+    
+  }
+
+```
+Function to combines geolocation and API fetching to get the user's current location and retrieve weather data based on that location.
+HTML:
+```
+<lightning-button 
+  variant="Success"
+  label="Fetch Current Location" 
+  onclick={handleCurrentLocation} 
+></lightning-button>
+```
+Javascript:
+```
+handleCurrentLocation() {
+    // Check if geolocation is supported by the browser
+    if (navigator.geolocation) {
+        // If supported, call getCurrentPosition to get the user's current location
+        navigator.geolocation.getCurrentPosition(
+            // Success callback function - executed when the location is successfully obtained
+            (position) => {
+                // Extract latitude and longitude from the position object
+                const currentLocation = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
+                // Log the current location to the console
+                console.log('Current Location:', currentLocation);
+
+                // Construct the API endpoint using the obtained latitude and longitude
+                let endPoint = `https://api.weatherapi.com/v1/current.json?key=6388b321ff7a4f239de125943230612&q=${currentLocation.latitude},${currentLocation.longitude}`;
+                // Log the constructed API endpoint to the console
+                console.log('Weather API endpoint:', endPoint);
+
+                // Fetch weather data based on the current location
+                fetch(endPoint, {
+                    method: 'GET'
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    // Log the fetched weather data to the console
+                    console.log('Weather data:', data);
+                    // Set the result property in the component to store the fetched data
+                    this.result = data;
+                })
+                .catch((error) => {
+                    // Log an error if there's an issue fetching the weather data
+                    console.error('Error fetching weather data:', error);
+                });
+            },
+            // Error callback function - executed if there's an issue getting the location
+            (error) => {
+                console.error('Error getting location:', error);
+            }
+        );
+    } else {
+        // Log an error if geolocation is not supported by the browser
+        console.error('Geolocation is not supported by this browser.');
+    }
+}
+
+```
 
 

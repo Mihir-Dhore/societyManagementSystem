@@ -3,9 +3,12 @@
 
 https://github.com/Mihir-Dhore/societyManagementSystem/assets/83826641/3f651574-2cc1-4dc0-8577-047b80383cde
 
-ERD:-
+<h1>ERD:-</h1>
 ![Society Management System ERD](https://github.com/Mihir-Dhore/societyManagementSystem/assets/83826641/28b60490-a93b-4650-aecf-f08b599a2695)
 
+To Explore Website⚡<br>
+GO TO:- https://thecodingstudio2-dev-ed.develop.my.site.com/sms <br>
+<b>Login Details:-</b> Username:- padow99806@mkurg.com , Password:- padow@123
 
 
 

@@ -1,12 +1,16 @@
 <b>Project Description:-</b>
 <h1>Society Management System</h1>
 
-
-<h1>Importan
-
 https://github.com/Mihir-Dhore/societyManagementSystem/assets/83826641/3f651574-2cc1-4dc0-8577-047b80383cde
 
-t Code</h1>
+ERD:-
+![Society Management System ERD](https://github.com/Mihir-Dhore/societyManagementSystem/assets/83826641/28b60490-a93b-4650-aecf-f08b599a2695)
+
+
+
+
+
+<h1>Important Code</h1>
 Parent To Child Relationship in LWC 
 Scenario:- When User Select Society From the Lookup Input Field from the Modal then it should show the Related Events to that Society
 
